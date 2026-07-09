@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Formio – fitness kalkulačka a týždenný body tracker.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Formio">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Formio – Kalkulačka transformácie</title>
+<style>
+:root {
+  --bg: #0f0f1a;
+  --bg2: #1a1a2e;
+  --card: #1e1e32;
+  --card2: #252540;
+  --accent: #e8ff47;
+  --accent2: #b8cc2a;
+  --text: #f0f0f0;
+  --text2: #a0a0b0;
+  --text3: #606080;
+  --border: rgba(232,255,71,0.12);
+  --border2: rgba(255,255,255,0.07);
+  --r: 16px;
+  --rs: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+.nav-brand {
+  padding: 0 16px;
+  font-size: 17px; font-weight: 900;
+  color: var(--accent); letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.nav-tab {
+  flex: 1; padding: 14px 6px;
+  text-align: center; font-size: 12px; font-weight: 600;
+  color: var(--text2); cursor: pointer;
+  border: none; border-bottom: 2px solid transparent;
+  background: none; letter-spacing: 0.02em;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* HERO */
+.hero {
+  background: var(--bg2);
+  padding: 28px 20px 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.hero-tag {
+  display: inline-block;
+  background: var(--accent); color: #0f0f1a;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
+}
+.hero h1 { font-size: 24px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+.hero h1 span { color: var(--accent); }
+.hero p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+/* FORMS */
+.form-wrap { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.field label {
+  display: block; font-size: 11px; font-weight: 700;
+  color: var(--text2); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 6px;
+}
+.field input, .field select {
+  width: 100%; background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--rs); color: var(--text);
+  font-size: 16px; padding: 12px 14px; outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none; appearance: none;
+}
+.field input:focus, .field select:focus { border-color: var(--accent); }
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+}
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.btn-primary {
+  width: 100%; background: var(--accent); color: #0f0f1a;
+  font-size: 16px; font-weight: 700; padding: 15px;
+  border: none; border-radius: var(--r); cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+.btn-primary:active { transform: scale(0.98); background: var(--accent2); }
+
+/* RESULTS */
+.results { display: none; padding: 0 20px; flex-direction: column; gap: 14px; }
+.results.show { display: flex; }
+.result-header { text-align: center; padding: 8px 0 4px; }
+.result-header h2 { font-size: 18px; font-weight: 700; }
+.result-header p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+.card { background: var(--card); border: 1px solid var(--border2); border-radius: var(--r); padding: 16px; }
+.card-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3); margin-bottom: 12px;
+}
+.bmi-row { display: flex; align-items: baseline; gap: 10px; }
+.bmi-num { font-size: 44px; font-weight: 800; color: var(--accent); line-height: 1; }
+.bmi-detail { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.bmi-detail strong { color: var(--text); display: block; font-size: 15px; }
+.bmi-bar-wrap { margin-top: 12px; }
+.bmi-bar-track {
+  height: 6px; border-radius: 3px;
+  background: linear-gradient(to right, #4fc3f7 0%, #81c784 28%, #ffb74d 50%, #e57373 75%);
+  position: relative; margin-bottom: 6px;
+}
+.bmi-bar-cursor {
+  position: absolute; top: -4px;
+  width: 14px; height: 14px; background: white; border-radius: 50%;
+  transform: translateX(-50%); box-shadow: 0 0 0 2px var(--accent);
+}
+.bmi-bar-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); }
+.kcal-main { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+.kcal-num { font-size: 38px; font-weight: 800; color: var(--accent); }
+.kcal-unit { font-size: 14px; color: var(--text2); }
+.kcal-sub { font-size: 12px; color: var(--text2); margin-bottom: 12px; line-height: 1.5; }
+.kcal-range { display: flex; gap: 8px; }
+.kcal-pill {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border2); border-radius: 8px; padding: 8px; text-align: center;
+}
+.kcal-pill .pval { font-size: 15px; font-weight: 700; color: var(--text); }
+.kcal-pill .plabel { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+.macro-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.macro-item { text-align: center; }
+.macro-circle {
+  width: 60px; height: 60px; border-radius: 50%;
+  margin: 0 auto 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px; line-height: 1;
+}
+.macro-circle small { font-size: 10px; font-weight: 500; opacity: 0.8; }
+.mc-p { background: rgba(100,181,246,0.15); color: #64b5f6; border: 1.5px solid rgba(100,181,246,0.3); }
+.mc-s { background: rgba(255,183,77,0.12); color: #ffb74d; border: 1.5px solid rgba(255,183,77,0.3); }
+.mc-t { background: rgba(129,199,132,0.12); color: #81c784; border: 1.5px solid rgba(129,199,132,0.3); }
+.macro-name { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.04em; }
+.timeline-main { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.timeline-num { font-size: 42px; font-weight: 800; color: var(--accent); line-height: 1; }
+.timeline-detail { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.timeline-detail strong { color: var(--text); }
+.timeline-months { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.t-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(232,255,71,0.15); border: 1px solid rgba(232,255,71,0.25); }
+.t-dot.done { background: var(--accent); border-color: var(--accent); }
+.reset-btn {
+  width: 100%; background: transparent; border: none;
+  color: var(--text3); font-size: 13px; padding: 10px;
+  cursor: pointer; text-decoration: underline; margin-top: 2px;
+}
+.cta-wrap { padding: 0 20px 20px; display: none; }
+.cta-wrap.show { display: block; }
+.btn-cta {
+  display: block; width: 100%;
+  background: transparent; border: 2px solid var(--accent);
+  color: var(--accent); font-size: 15px; font-weight: 700;
+  padding: 14px; border-radius: var(--r); text-align: center;
+  text-decoration: none; cursor: pointer; margin-top: 14px;
+  transition: background 0.2s;
+}
+.btn-cta:active { background: rgba(232,255,71,0.1); }
+.divider { height: 1px; background: var(--border2); margin: 4px 0; }
+
+/* ===== TRACKING ===== */
+.track-hero {
+  background: var(--bg2); padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.track-hero h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.track-hero p { font-size: 13px; color: var(--text2); }
+.track-wrap { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.section-title {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3); margin-bottom: 10px;
+}
+
+/* Stats row */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat-box {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--rs); padding: 10px 8px; text-align: center;
+}
+.stat-val { font-size: 18px; font-weight: 800; color: var(--accent); line-height: 1; }
+.stat-val.neutral { color: var(--text); }
+.stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 3px; }
+.stat-delta { font-size: 11px; margin-top: 2px; }
+.delta-down { color: #81c784; }
+.delta-up { color: #e57373; }
+.delta-eq { color: var(--text3); }
+
+/* Input card */
+.input-card {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 16px;
+}
+.input-date {
+  width: 100%; background: var(--card2);
+  border: 1px solid var(--border2); border-radius: var(--rs);
+  color: var(--text); font-size: 15px; padding: 10px 12px;
+  outline: none; margin-bottom: 14px;
+  -webkit-appearance: none;
+}
+.input-date:focus { border-color: var(--accent); }
+.input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.mini-field label {
+  display: block; font-size: 10px; font-weight: 700;
+  color: var(--text2); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 5px;
+}
+.mini-field input {
+  width: 100%; background: var(--card2);
+  border: 1px solid var(--border2); border-radius: var(--rs);
+  color: var(--text); font-size: 15px; padding: 10px 12px;
+  outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.mini-field input:focus { border-color: var(--accent); }
+.mini-field .unit { font-size: 11px; color: var(--text3); display: block; margin-top: 3px; text-align: right; }
+
+/* Photo upload */
+.photo-upload-area {
+  width: 100%; min-height: 90px;
+  background: var(--card2);
+  border: 1.5px dashed rgba(232,255,71,0.25);
+  border-radius: var(--rs);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px; cursor: pointer;
+  transition: border-color 0.2s; margin-bottom: 8px;
+  overflow: hidden;
+}
+.photo-upload-area:active { border-color: var(--accent); }
+.photo-upload-area img {
+  width: 100%; max-height: 220px;
+  object-fit: cover; display: block;
+}
+.photo-upload-icon { font-size: 26px; }
+.photo-upload-label { font-size: 13px; color: var(--text3); }
+.photo-clear-btn {
+  width: 100%; background: transparent;
+  border: 1px solid rgba(229,115,115,0.3);
+  color: #e57373; font-size: 12px; padding: 8px;
+  border-radius: var(--rs); cursor: pointer; margin-bottom: 14px;
+}
+
+/* Chart */
+.chart-wrap {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 16px;
+}
+.chart-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.chart-tab {
+  font-size: 12px; font-weight: 600; padding: 5px 12px;
+  border-radius: 20px; border: 1px solid var(--border2);
+  background: transparent; color: var(--text2); cursor: pointer;
+  transition: all 0.15s;
+}
+.chart-tab.active { background: var(--accent); color: #0f0f1a; border-color: var(--accent); }
+
+/* History */
+.history-wrap {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r); overflow: hidden;
+}
+.history-header {
+  display: grid; grid-template-columns: 68px 1fr 1fr 1fr 44px 32px;
+  gap: 4px; padding: 10px 12px;
+  background: var(--card2); border-bottom: 1px solid var(--border2);
+}
+.history-header span {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text3); text-align: center;
+}
+.history-header span:first-child { text-align: left; }
+.history-entry { border-bottom: 1px solid rgba(255,255,255,0.04); }
+.history-entry:last-child { border-bottom: none; }
+.history-row {
+  display: grid; grid-template-columns: 68px 1fr 1fr 1fr 44px 32px;
+  gap: 4px; padding: 10px 12px; align-items: center;
+}
+.date-cell { font-size: 12px; color: var(--text2); }
+.val-cell { font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
+.val-cell.empty { color: var(--text3); font-weight: 400; }
+.photo-cell { display: flex; align-items: center; justify-content: center; }
+.hist-thumb {
+  width: 36px; height: 36px; object-fit: cover;
+  border-radius: 6px; cursor: pointer; display: block;
+  border: 1px solid var(--border2);
+}
+.history-chips {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  padding: 0 12px 8px;
+}
+.chip {
+  font-size: 11px; color: var(--text3);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border2);
+  border-radius: 20px; padding: 2px 10px;
+}
+.del-btn {
+  background: none; border: none; color: var(--text3);
+  font-size: 15px; cursor: pointer; padding: 4px;
+  display: flex; align-items: center; justify-content: center;
+}
+.del-btn:active { color: #e57373; }
+
+.empty-state {
+  padding: 32px 20px; text-align: center;
+  color: var(--text3); font-size: 14px; line-height: 1.7;
+}
+.empty-state span { font-size: 28px; display: block; margin-bottom: 8px; }
+
+
+
+/* PERSONALIZED INSIGHT BANNER */
+.insight-banner {
+  margin: 4px 20px 8px;
+  background: linear-gradient(135deg, rgba(232,255,71,0.10), rgba(232,255,71,0.03));
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.insight-banner::before {
+  content: '';
+  position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+  background: var(--accent);
+}
+.insight-banner .ib-headline {
+  font-size: 17px; font-weight: 800; color: var(--text);
+  line-height: 1.4; margin-bottom: 6px;
+}
+.insight-banner .ib-headline .hl {
+  color: var(--accent);
+}
+.insight-banner .ib-sub {
+  font-size: 13px; color: var(--text2); line-height: 1.55;
+}
+
+/* VALYRA CTA CARD */
+.valyra-cta-card {
+  margin: 0 20px 8px;
+  background: linear-gradient(135deg, #1a0a2e, #0d0d1f);
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: var(--r);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.valyra-cta-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, #a78bfa, #ec4899, #a78bfa);
+}
+.valyra-cta-tag {
+  display: inline-block;
+  background: rgba(167,139,250,0.15);
+  border: 1px solid rgba(167,139,250,0.3);
+  color: #a78bfa;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 10px;
+}
+.valyra-cta-title {
+  font-size: 18px; font-weight: 800; color: #f0f0f8;
+  margin-bottom: 6px; line-height: 1.3;
+}
+.valyra-cta-sub {
+  font-size: 13px; color: #8888aa; line-height: 1.6; margin-bottom: 14px;
+}
+.btn-valyra {
+  display: block; width: 100%;
+  background: linear-gradient(135deg, #a78bfa, #ec4899);
+  color: white; font-size: 16px; font-weight: 800;
+  padding: 14px; border-radius: var(--r);
+  text-align: center; text-decoration: none;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(167,139,250,0.3);
+  transition: opacity 0.2s;
+}
+.btn-valyra:active { opacity: 0.85; }
+.valyra-social-proof {
+  font-size: 11px; color: #44445a;
+  text-align: center; margin-top: 10px;
+}
+
+/* CTA CONSULTATION BANNER */
+.consult-banner {
+  margin: 0 20px 20px;
+  background: linear-gradient(135deg, rgba(232,255,71,0.08), rgba(232,255,71,0.03));
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+}
+.consult-banner-title {
+  font-size: 16px; font-weight: 700; color: var(--text);
+  margin-bottom: 6px; line-height: 1.3;
+}
+.consult-banner-sub {
+  font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px;
+}
+.consult-btns { display: flex; flex-direction: column; gap: 8px; }
+.btn-whatsapp {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: #25D366; color: white;
+  font-size: 15px; font-weight: 700; padding: 13px;
+  border-radius: var(--r); text-decoration: none;
+  border: none; cursor: pointer; transition: opacity 0.2s;
+}
+.btn-whatsapp:active { opacity: 0.85; }
+.btn-call {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: transparent; color: var(--accent);
+  font-size: 14px; font-weight: 600; padding: 11px;
+  border-radius: var(--r); text-decoration: none;
+  border: 1.5px solid var(--accent); cursor: pointer; transition: background 0.2s;
+}
+.btn-call:active { background: rgba(232,255,71,0.08); }
+.consult-privacy {
+  font-size: 12px; color: var(--text2); text-align: center;
+  margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.5;
+}
+.consult-trust { font-size: 12px; color: var(--text3); text-align: center; margin-top: 6px; line-height: 1.5; }
+.consult-form { display: flex; flex-direction: column; gap: 10px; }
+.consult-input {
+  width: 100%; background: var(--card2);
+  border: 1px solid var(--border2); border-radius: var(--rs);
+  color: var(--text); font-size: 16px; padding: 13px 14px; outline: none;
+  transition: border-color 0.2s; -webkit-appearance: none; appearance: none;
+}
+.consult-input:focus { border-color: var(--accent); }
+.consult-input::placeholder { color: var(--text3); }
+select.consult-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+}
+.consult-success {
+  background: rgba(129,199,132,0.1); border: 1px solid rgba(129,199,132,0.3);
+  border-radius: var(--rs); padding: 16px; text-align: center;
+  font-size: 14px; color: var(--text); line-height: 1.6;
+}
+
+/* BMI INFO EXPAND */
+.bmi-info-box {
+  margin-top: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border2);
+  border-radius: var(--rs);
+  padding: 12px 14px;
+  font-size: 12px; color: var(--text2); line-height: 1.7;
+}
+.bmi-info-box strong { color: var(--text); }
+.bmi-warning { color: #ffb74d; font-size: 11px; margin-top: 6px; display: block; }
+.bmi-categories { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.bmi-cat {
+  background: var(--card2); border-radius: 8px; padding: 8px 10px;
+  font-size: 11px; line-height: 1.5;
+}
+.bmi-cat .bc-label { font-weight: 700; display: block; }
+.bmi-cat .bc-val { color: var(--text3); }
+
+/* NEW CONTACT PAGE */
+.contact-page-wrap { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.contact-hero {
+  background: linear-gradient(135deg, rgba(232,255,71,0.08), rgba(232,255,71,0.02));
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 24px 20px; text-align: center;
+}
+.contact-hero-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--accent); color: #0f0f1a;
+  font-size: 24px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px; box-shadow: 0 4px 20px rgba(232,255,71,0.25);
+}
+.contact-hero-name { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.contact-hero-title { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
+.contact-services {
+  display: flex; flex-direction: column; gap: 6px;
+  text-align: left; margin-bottom: 16px;
+}
+.contact-service {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text2);
+}
+.contact-service span { color: var(--accent); font-size: 14px; }
+.contact-cta-title {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  margin-bottom: 10px; text-align: center;
+}
+.contact-action-btns { display: flex; flex-direction: column; gap: 8px; }
+.c-btn-wa {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: #25D366; color: white;
+  font-size: 15px; font-weight: 700; padding: 14px;
+  border-radius: var(--r); text-decoration: none;
+}
+.c-btn-call {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: transparent; color: var(--accent);
+  font-size: 14px; font-weight: 600; padding: 12px;
+  border-radius: var(--r); text-decoration: none;
+  border: 1.5px solid var(--accent);
+}
+.c-btn-email {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: transparent; color: var(--text2);
+  font-size: 14px; font-weight: 500; padding: 12px;
+  border-radius: var(--r); text-decoration: none;
+  border: 1px solid var(--border2);
+}
+.contact-valyra-note {
+  background: rgba(232,255,71,0.05); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  font-size: 13px; color: var(--text2); text-align: center; line-height: 1.7;
+}
+.contact-valyra-note strong { color: var(--accent); }
+
+/* ===== CONTACT ===== */
+.contact-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 24px 16px; text-align: center;
+}
+.contact-avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--accent); color: #0f0f1a;
+  font-size: 22px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+}
+.contact-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.contact-title { font-size: 13px; color: var(--text2); }
+.contact-row {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 16px;
+  text-decoration: none; color: var(--text);
+  transition: border-color 0.2s;
+}
+.contact-row:active { border-color: var(--accent); }
+.contact-icon { font-size: 22px; flex-shrink: 0; }
+.contact-info { flex: 1; }
+.contact-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.contact-value { font-size: 15px; font-weight: 600; color: var(--text); }
+.contact-arrow { font-size: 20px; color: var(--text3); }
+.contact-note {
+  background: rgba(232,255,71,0.05); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  font-size: 13px; color: var(--text2); text-align: center; line-height: 1.7;
+}
+.contact-note strong { color: var(--accent); }
+
+/* ===== PHOTO MODAL ===== */
+.photo-modal {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.93);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.photo-modal img {
+  max-width: 100%; max-height: 85vh;
+  border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.photo-modal-close {
+  position: absolute; top: 16px; right: 16px;
+  background: rgba(255,255,255,0.1); border: none;
+  color: white; font-size: 18px;
+  width: 36px; height: 36px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.photo-modal-date {
+  position: absolute; bottom: 30px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7); color: white;
+  font-size: 13px; padding: 6px 16px; border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ===== iOS BANNER ===== */
+.ios-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 998;
+  backdrop-filter: blur(2px);
+}
+.ios-sheet {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 24px 24px 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.ios-close {
+  position: absolute; top: 14px; right: 16px;
+  background: rgba(255,255,255,0.08); border: none;
+  color: var(--text2); font-size: 14px;
+  width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.ios-icon {
+  width: 64px; height: 64px; border-radius: 16px;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(232,255,71,0.3);
+}
+.ios-icon-f { font-size: 30px; font-weight: 900; color: #0f0f1a; line-height: 1; }
+.ios-title { font-size: 20px; font-weight: 700; color: var(--text); }
+.ios-sub { font-size: 13px; color: var(--text2); text-align: center; line-height: 1.5; }
+.ios-steps { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.ios-step {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--rs); padding: 12px 14px;
+}
+.ios-step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: #0f0f1a;
+  font-size: 13px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ios-step-text { font-size: 14px; color: var(--text2); line-height: 1.4; }
+.ios-step-text strong { color: var(--text); }
+.ios-share-badge {
+  display: inline-block; background: #007aff;
+  color: white; font-size: 12px;
+  padding: 1px 5px; border-radius: 4px; margin-left: 2px;
+}
+.ios-arrow { font-size: 20px; animation: bounce 1s infinite; display: inline-block; margin-top: 4px; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+</style>
+<!-- ===== CONFIG – pri novom klientovi/projekte meníš LEN TOTO, zvyšok kódu sa nedotýka ===== -->
+<script>
+const CONFIG = {
+  brand: {
+    name: 'Formio',
+    accent: '#e8ff47',
+    accent2: '#b8cc2a',
+  },
+  contact: {
+    name: 'Ján Karas',
+    initials: 'JK',
+    title: 'Fitness tréner a výživový poradca • 8 rokov praxe',
+    services: [
+      'Pomôžem ti schudnúť bez hladovania',
+      'Nastavím ti jedálniček na mieru',
+      'Zostavím tréningový plán',
+      'Naučím ťa návyky ktoré vydržia'
+    ],
+    whatsapp: '421902404722',
+    whatsappMsgCalc: 'Ahoj, mám záujem o bezplatnú konzultáciu po kalkulačke.',
+    whatsappMsgContact: 'Ahoj, mám záujem o bezplatnú konzultáciu.',
+    phone: '+421902404722',
+    phoneDisplay: '0902 404 722',
+    email: 'karas.jan2@gmail.com',
+  },
+  offer: {
+    name: 'Valyra',
+    url: 'https://valyra.pro',
+    tag: '7 dní zadarmo',
+    titleCalc: 'Toto bol len odhad. Chceš presný plán?',
+    subCalc: 'Valyra ti z týchto čísel pripraví personalizovaný jedálniček, tréning a koučing na mieru – a upravuje ho podľa tvojho pokroku.',
+    titleTrack: 'Sleduješ pokrok. Chceš aj plán, ktorý sa mu prispôsobí?',
+    subTrack: 'Valyra vyhodnotí tvoje merania a podľa vývoja upravuje jedálniček aj tréning – nemusíš si to počítať sama.',
+    ctaText: 'Vyskúšaj Valyra zadarmo →',
+    linkText: 'Pozrieť Valyra →',
+    socialProof: 'Viac ako 100 žien už zmenilo svoje návyky',
+  },
+  consult: {
+    // webhookUrl: nechaj prázdne = rezervácia sa pošle tebe na WhatsApp (funguje hneď, bez nastavenia).
+    // Keď chceš ukladať do Google Sheetu + e-mail, vlož sem Apps Script webhook (rovnako ako pri veritas kvíze).
+    webhookUrl: '',
+    titleCalc: 'Rezervuj si nezáväzný 15-minútový hovor',
+    subCalc: 'Nechaj mi kontakt a kedy sa ti hodí — ozvem sa ti a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.',
+    ctaText: 'Rezervovať hovor →',
+    privacy: '🔒 Tvoje údaje sú u nás v bezpečí — neposielame ich nikam ďalej',
+    trust: '8 rokov praxe · prvá konzultácia zadarmo · bez záväzku',
+  },
+  tracking: {
+    metaPixelId: '1529505581872759',
+    clarityId: 'x6v4tcfaa7',
+  }
+};
+// Odvodené hodnoty – toto nepotrebuješ ručne meniť
+CONFIG.contact.whatsappUrlCalc = 'https://wa.me/' + CONFIG.contact.whatsapp + '?text=' + encodeURIComponent(CONFIG.contact.whatsappMsgCalc);
+CONFIG.contact.whatsappUrlContact = 'https://wa.me/' + CONFIG.contact.whatsapp + '?text=' + encodeURIComponent(CONFIG.contact.whatsappMsgContact);
+CONFIG.contact.telHref = 'tel:' + CONFIG.contact.phone;
+CONFIG.contact.mailHref = 'mailto:' + CONFIG.contact.email;
+CONFIG.contact.servicesHtml = CONFIG.contact.services.map(function(s){ return '<div class="contact-service"><span>✅</span> ' + s + '</div>'; }).join('');
+
+// Naplní DOM prvky s data-cfg-* atribútmi hodnotami z CONFIG.
+function getCfgPath(obj, path) { return path.split('.').reduce(function(o,k){ return o && o[k]; }, obj); }
+function applyConfig() {
+  document.querySelectorAll('[data-cfg-text]').forEach(function(el) {
+    var v = getCfgPath(CONFIG, el.getAttribute('data-cfg-text'));
+    if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-cfg-href]').forEach(function(el) {
+    var v = getCfgPath(CONFIG, el.getAttribute('data-cfg-href'));
+    if (v !== undefined) el.setAttribute('href', v);
+  });
+  document.querySelectorAll('[data-cfg-html]').forEach(function(el) {
+    var v = getCfgPath(CONFIG, el.getAttribute('data-cfg-html'));
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.documentElement.style.setProperty('--accent', CONFIG.brand.accent);
+  document.documentElement.style.setProperty('--accent2', CONFIG.brand.accent2);
+}
+</script>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", CONFIG.tracking.clarityId);
+</script>
+<!-- Meta Pixel -->
+<script type="text/javascript">
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', CONFIG.tracking.metaPixelId);
+    fbq('track', 'PageView');
+</script>
+<script>
+// Jednotný tracking helper – fíruje Meta Pixel aj Clarity custom event naraz.
+function trackEvent(fbEventName, params) {
+  try { if (typeof fbq === 'function') fbq('track', fbEventName, params || {}); } catch (e) {}
+  try { if (typeof clarity === 'function') clarity('event', fbEventName); } catch (e) {}
+}
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand" data-cfg-text="brand.name">Formio</div>
+  <button class="nav-tab active" onclick="showPage('calc', this)">📊 Kalkulačka</button>
+  <button class="nav-tab" onclick="showPage('track', this)">📏 Tracking</button>
+  <button class="nav-tab" onclick="showPage('contact', this)">✉️ Kontakt</button>
+</nav>
+
+<!-- ===== KALKULAČKA ===== -->
+<div class="page active" id="page-calc">
+  <div class="hero">
+    <span class="hero-tag" data-cfg-text="brand.name">Formio</span>
+    <h1>Tvojej forme to <span>povieme</span> rovno</h1>
+    <p>BMI, kalórie, makrá a odhad času do cieľa.</p>
+  </div>
+
+  <div class="form-wrap" id="formSection">
+    <div class="row2">
+      <div class="field">
+        <label>Pohlavie</label>
+        <select id="gender">
+          <option value="f">Žena</option>
+          <option value="m">Muž</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Vek</label>
+        <input type="number" id="age" placeholder="30" min="15" max="80" inputmode="numeric">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Výška (cm)</label>
+        <input type="number" id="height" placeholder="165" min="140" max="220" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>Aktuálna váha (kg)</label>
+        <input type="number" id="weight" placeholder="75" min="40" max="250" inputmode="decimal">
+      </div>
+    </div>
+    <div class="field">
+      <label>Cieľová váha (kg)</label>
+      <input type="number" id="goalWeight" placeholder="60" min="40" max="250" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label>Aktivita</label>
+      <select id="activity">
+        <option value="1.2">Sedavý životný štýl</option>
+        <option value="1.375">Mierne aktívna/y (1–3× týždenne)</option>
+        <option value="1.55" selected>Aktívna/y (3–5× týždenne)</option>
+        <option value="1.725">Veľmi aktívna/y (6–7× týždenne)</option>
+      </select>
+    </div>
+    <button class="btn-primary" onclick="calculate()">Vypočítať môj plán →</button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="result-header">
+      <h2>Tvoj osobný plán</h2>
+      <p id="resultSubtitle"></p>
+    </div>
+    <div class="insight-banner" id="insightBanner">
+      <div class="ib-headline" id="insightHeadline"></div>
+      <div class="ib-sub" id="insightSub"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">BMI a ideálna váha</div>
+      <div class="bmi-row">
+        <div class="bmi-num" id="bmiVal">–</div>
+        <div class="bmi-detail">
+          <strong id="bmiCategory">–</strong>
+          <span id="bmiRange">–</span>
+        </div>
+      </div>
+      <div class="bmi-bar-wrap">
+        <div class="bmi-bar-track">
+          <div class="bmi-bar-cursor" id="bmiCursor" style="left:0%"></div>
+        </div>
+        <div class="bmi-bar-labels">
+          <span>Podváha</span><span>Norma</span><span>Nadváha</span><span>Obezita</span>
+        </div>
+      </div>
+      <div class="bmi-info-box">
+        <strong>Čo znamená tvoje BMI pásmo:</strong>
+        <div class="bmi-categories">
+          <div class="bmi-cat"><span class="bc-label" style="color:#4fc3f7;">Podváha</span><span class="bc-val">pod 18.5</span></div>
+          <div class="bmi-cat"><span class="bc-label" style="color:#81c784;">Norma</span><span class="bc-val">18.5 – 24.9</span></div>
+          <div class="bmi-cat"><span class="bc-label" style="color:#ffb74d;">Nadváha</span><span class="bc-val">25 – 29.9</span></div>
+          <div class="bmi-cat"><span class="bc-label" style="color:#e57373;">Obezita</span><span class="bc-val">30 a viac</span></div>
+        </div>
+        <span class="bmi-warning">⚠️ BMI nezohľadňuje svalovú hmotu – športovci môžu mať vyššie BMI aj pri nízkej tučnosti.</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Denný kalorický plán</div>
+      <div class="kcal-main">
+        <div class="kcal-num" id="kcalVal">–</div>
+        <div class="kcal-unit">kcal / deň</div>
+      </div>
+      <div class="kcal-sub" id="kcalSub">–</div>
+      <div class="kcal-range">
+        <div class="kcal-pill"><div class="pval" id="kcalMaint">–</div><div class="plabel">Udržanie</div></div>
+        <div class="kcal-pill"><div class="pval" id="kcalDeficit">–</div><div class="plabel">Chudnutie</div></div>
+        <div class="kcal-pill"><div class="pval" id="kcalAggr">–</div><div class="plabel">Rýchle</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Makrá na deň</div>
+      <div class="macro-grid">
+        <div class="macro-item">
+          <div class="macro-circle mc-p"><span id="macroP">–</span><small>g</small></div>
+          <div class="macro-name">Bielkoviny</div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-circle mc-s"><span id="macroC">–</span><small>g</small></div>
+          <div class="macro-name">Sacharidy</div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-circle mc-t"><span id="macroF">–</span><small>g</small></div>
+          <div class="macro-name">Tuky</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Odhad času do cieľa</div>
+      <div class="timeline-main">
+        <div class="timeline-num" id="timelineNum">–</div>
+        <div class="timeline-detail" id="timelineDetail">–</div>
+      </div>
+      <div class="timeline-months" id="timelineDots"></div>
+    </div>
+    <!-- KONZULTÁCIA (primárna akcia – dopyt) -->
+    <div class="consult-banner" id="consultBanner" style="display:none;">
+      <div class="consult-banner-title" data-cfg-text="consult.titleCalc">Chceš svoj cieľ dosiahnuť čo najrýchlejšie?</div>
+      <div class="consult-banner-sub" data-cfg-text="consult.subCalc">Nechaj mi kontakt a kedy sa ti hodí — ozvem sa ti a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.</div>
+      <form class="consult-form" id="consultForm" onsubmit="submitConsult(event)">
+        <input type="text" id="cName" class="consult-input" placeholder="Tvoje meno" required autocomplete="name">
+        <input type="tel" id="cPhone" class="consult-input" placeholder="Telefón (napr. 0902 123 456)" required inputmode="tel" autocomplete="tel">
+        <select id="cTime" class="consult-input" aria-label="Kedy sa ti hodí">
+          <option value="Dnes večer">Kedy sa ti hodí? — Dnes večer</option>
+          <option value="Zajtra doobeda">Zajtra doobeda</option>
+          <option value="Zajtra večer">Zajtra večer</option>
+          <option value="Cez víkend">Cez víkend</option>
+          <option value="Kedykoľvek, dohodneme sa">Kedykoľvek — dohodneme sa</option>
+        </select>
+        <button type="submit" class="btn-whatsapp" id="consultSubmit"><span data-cfg-text="consult.ctaText">Rezervovať hovor →</span></button>
+      </form>
+      <div class="consult-success" id="consultSuccess" style="display:none;"></div>
+      <div class="consult-privacy" data-cfg-text="consult.privacy">🔒 Tvoje údaje sú u nás v bezpečí — neposielame ich nikam ďalej</div>
+      <div class="consult-trust" data-cfg-text="consult.trust">8 rokov praxe · prvá konzultácia zadarmo · bez záväzku</div>
+    </div>
+
+    <!-- VALYRA (sekundárna akcia – tvoj produkt, predstavíš ho na konzultácii) -->
+    <div class="valyra-cta-card" id="valyraCta" style="display:none;">
+      <div class="valyra-cta-tag" data-cfg-text="offer.tag">7 dní zadarmo</div>
+      <div class="valyra-cta-title" data-cfg-text="offer.titleCalc">Toto bol len odhad. Chceš presný plán?</div>
+      <div class="valyra-cta-sub" data-cfg-text="offer.subCalc">Valyra ti z týchto čísel pripraví personalizovaný jedálniček, tréning a koučing na mieru – a upravuje ho podľa tvojho pokroku.</div>
+      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackEvent('Lead', {content_name:'valyra_trial_calculator'})">Vyskúšaj Valyra zadarmo →</a>
+      <div class="valyra-social-proof" data-cfg-text="offer.socialProof">Viac ako 100 žien už zmenilo svoje návyky</div>
+    </div>
+
+    <button class="reset-btn" onclick="resetCalc()">← Zmeniť hodnoty</button>
+  </div>
+</div>
+
+<!-- ===== TRACKING ===== -->
+<div class="page" id="page-track">
+  <div class="track-hero">
+    <h2>Týždenný tracking</h2>
+    <p>Zaznamenávaj merania raz týždenne. Uložené lokálne v tvojom mobile.</p>
+  </div>
+  <div class="track-wrap">
+
+    <div id="statsSection" style="display:none;">
+      <div class="section-title">Posledný záznam</div>
+      <div class="stats-row" id="statsRow"></div>
+    </div>
+
+    <div class="input-card">
+      <div class="section-title">Nové meranie</div>
+      <input type="date" class="input-date" id="trackDate">
+      <div class="input-grid">
+        <div class="mini-field">
+          <label>Váha</label>
+          <input type="number" id="tWeight" placeholder="70.5" inputmode="decimal" step="0.1">
+          <span class="unit">kg</span>
+        </div>
+        <div class="mini-field">
+          <label>Paža</label>
+          <input type="number" id="tArm" placeholder="32" inputmode="decimal" step="0.5">
+          <span class="unit">cm</span>
+        </div>
+        <div class="mini-field">
+          <label>Pás</label>
+          <input type="number" id="tWaist" placeholder="80" inputmode="decimal" step="0.5">
+          <span class="unit">cm</span>
+        </div>
+        <div class="mini-field">
+          <label>Boky</label>
+          <input type="number" id="tHips" placeholder="100" inputmode="decimal" step="0.5">
+          <span class="unit">cm</span>
+        </div>
+        <div class="mini-field">
+          <label>Stehno</label>
+          <input type="number" id="tThigh" placeholder="60" inputmode="decimal" step="0.5">
+          <span class="unit">cm</span>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-bottom:8px;">Fotka pokroku (voliteľné)</div>
+      <input type="file" id="tPhoto" accept="image/*" style="display:none;" onchange="previewPhoto(this)">
+      <div class="photo-upload-area" id="photoPreview" onclick="document.getElementById('tPhoto').click()">
+        <div class="photo-upload-icon">📷</div>
+        <div class="photo-upload-label">Vybrať z galérie</div>
+      </div>
+      <button class="photo-clear-btn" id="photoClearBtn" style="display:none;" onclick="clearPhoto()">✕ Odstrániť fotku</button>
+
+      <button class="btn-primary" onclick="saveEntry()">Uložiť záznam</button>
+    </div>
+
+    <div class="chart-wrap" id="chartWrap" style="display:none;">
+      <div class="section-title">Graf pokroku</div>
+      <div class="chart-tabs">
+        <button class="chart-tab active" onclick="switchChart('weight',this)">Váha</button>
+        <button class="chart-tab" onclick="switchChart('arm',this)">Paža</button>
+        <button class="chart-tab" onclick="switchChart('waist',this)">Pás</button>
+        <button class="chart-tab" onclick="switchChart('hips',this)">Boky</button>
+        <button class="chart-tab" onclick="switchChart('thigh',this)">Stehno</button>
+      </div>
+      <canvas id="trackChart" height="180"></canvas>
+    </div>
+
+    <!-- VALYRA CTA pre engažovaných užívateľov trackera -->
+    <div class="valyra-cta-card" id="trackValyraCta" style="display:none; margin:0 0 4px;">
+      <div class="valyra-cta-tag" data-cfg-text="offer.tag">7 dní zadarmo</div>
+      <div class="valyra-cta-title" data-cfg-text="offer.titleTrack">Sleduješ pokrok. Chceš aj plán, ktorý sa mu prispôsobí?</div>
+      <div class="valyra-cta-sub" data-cfg-text="offer.subTrack">Valyra vyhodnotí tvoje merania a podľa vývoja upravuje jedálniček aj tréning – nemusíš si to počítať sama.</div>
+      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackEvent('Lead', {content_name:'valyra_trial_tracking'})">Vyskúšaj Valyra zadarmo →</a>
+    </div>
+
+    <div id="historySection" style="display:none;">
+      <div class="section-title" style="margin-bottom:0;">História meraní</div>
+      <div class="history-wrap">
+        <div class="history-header">
+          <span>Dátum</span><span>Váha</span><span>Pás</span><span>Boky</span><span>📷</span><span></span>
+        </div>
+        <div id="historyBody"></div>
+      </div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <span>📏</span>
+      Zatiaľ žiadne záznamy.<br>Zadaj prvé týždenné merania vyššie.
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== KONTAKT ===== -->
+<div class="page" id="page-contact">
+  <div class="contact-page-wrap">
+
+    <div class="contact-hero">
+      <div class="contact-hero-avatar" data-cfg-text="contact.initials">JK</div>
+      <div class="contact-hero-name" data-cfg-text="contact.name">Ján Karas</div>
+      <div class="contact-hero-title" data-cfg-text="contact.title">Fitness tréner a výživový poradca • 8 rokov praxe</div>
+      <div class="contact-services" data-cfg-html="contact.servicesHtml">
+        <div class="contact-service"><span>✅</span> Pomôžem ti schudnúť bez hladovania</div>
+        <div class="contact-service"><span>✅</span> Nastavím ti jedálniček na mieru</div>
+        <div class="contact-service"><span>✅</span> Zostavím tréningový plán</div>
+        <div class="contact-service"><span>✅</span> Naučím ťa návyky ktoré vydržia</div>
+      </div>
+      <div class="contact-cta-title">Prvá konzultácia je bezplatná 👇</div>
+      <div class="contact-action-btns">
+        <a href="https://wa.me/421902404722?text=Ahoj%20Ján%2C%20mám%20záujem%20o%20bezplatnú%20konzultáciu." class="c-btn-wa" data-cfg-href="contact.whatsappUrlContact" onclick="trackEvent('Contact', {content_name:'whatsapp_contact_page'})">💬 WhatsApp</a>
+        <a href="tel:+421902404722" class="c-btn-call" data-cfg-href="contact.telHref" onclick="trackEvent('Contact', {content_name:'call_contact_page'})">📞 Zavolať: <span data-cfg-text="contact.phoneDisplay">0902 404 722</span></a>
+        <a href="mailto:karas.jan2@gmail.com" class="c-btn-email" data-cfg-href="contact.mailHref" onclick="trackEvent('Contact', {content_name:'email_contact_page'})">✉️ <span data-cfg-text="contact.email">karas.jan2@gmail.com</span></a>
+      </div>
+    </div>
+
+    <div class="contact-valyra-note">
+      Chceš komplexný program s pravidelným koučingom?<br>
+      <strong data-cfg-text="offer.name">Valyra</strong> – personalizovaný plán, výživa, tréning.
+      <br><br>
+      <a href="https://valyra.pro" target="_blank" style="color:var(--accent);font-weight:700;text-decoration:none;" data-cfg-href="offer.url" data-cfg-text="offer.linkText" onclick="trackEvent('Lead', {content_name:'valyra_trial_contact_page'})">Pozrieť Valyra →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHOTO MODAL -->
+<div id="photoModal" class="photo-modal" style="display:none;" onclick="closePhoto()">
+  <button class="photo-modal-close">✕</button>
+  <img id="photoModalImg" src="" alt="Fotka pokroku">
+  <div class="photo-modal-date" id="photoModalDate"></div>
+</div>
+
+<!-- iOS BANNER -->
+<div id="iosBanner" style="display:none;">
+  <div class="ios-overlay" onclick="closeIosBanner()"></div>
+  <div class="ios-sheet">
+    <button class="ios-close" onclick="closeIosBanner()">✕</button>
+    <div class="ios-icon"><div class="ios-icon-f">F</div></div>
+    <div class="ios-title">Nainštaluj Formio</div>
+    <div class="ios-sub">Pridaj na plochu pre rýchly prístup bez prehliadača.</div>
+    <div class="ios-steps">
+      <div class="ios-step">
+        <div class="ios-step-num">1</div>
+        <div class="ios-step-text">Klepni na <strong>Zdieľať</strong> v Safari <span class="ios-share-badge">⬆</span></div>
+      </div>
+      <div class="ios-step">
+        <div class="ios-step-num">2</div>
+        <div class="ios-step-text">Vyber <strong>„Pridať na plochu"</strong></div>
+      </div>
+      <div class="ios-step">
+        <div class="ios-step-num">3</div>
+        <div class="ios-step-text">Potvrď klepnutím na <strong>„Pridať"</strong></div>
+      </div>
+    </div>
+    <div class="ios-arrow">⬇</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+applyConfig();
+// ===== NAVIGATION =====
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'track') renderTracking();
+}
+
+// ===== CALCULATOR =====
+function calculate() {
+  const gender = document.getElementById('gender').value;
+  const age = parseFloat(document.getElementById('age').value);
+  const height = parseFloat(document.getElementById('height').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+  const goalWeight = parseFloat(document.getElementById('goalWeight').value);
+  const activity = parseFloat(document.getElementById('activity').value);
+  if (!age || !height || !weight || !goalWeight) { alert('Vyplň prosím všetky polia.'); return; }
+  if (goalWeight >= weight) { alert('Cieľová váha musí byť nižšia ako aktuálna váha.'); return; }
+
+  const hm = height / 100;
+  const bmi = weight / (hm * hm);
+  let bmiCat, bmiRng;
+  if (bmi < 18.5) { bmiCat = 'Podváha'; bmiRng = 'Odporúčaný rozsah: 18.5 – 24.9'; }
+  else if (bmi < 25) { bmiCat = 'Normálna váha'; bmiRng = 'Skvelé – si v norme!'; }
+  else if (bmi < 30) { bmiCat = 'Nadváha'; bmiRng = 'Cieľ: dostať sa pod 25'; }
+  else { bmiCat = 'Obezita'; bmiRng = 'Krok 1: dostať sa pod 30'; }
+
+  let idealW = gender === 'f'
+    ? 45.5 + 2.3 * ((height - 152.4) / 2.54)
+    : 50 + 2.3 * ((height - 152.4) / 2.54);
+  idealW = Math.round(idealW * 10) / 10;
+
+  let bmr = gender === 'f'
+    ? 10 * weight + 6.25 * height - 5 * age - 161
+    : 10 * weight + 6.25 * height - 5 * age + 5;
+  const tdee = Math.round(bmr * activity);
+  const deficit = Math.round(tdee - 500);
+  const aggressive = Math.round(tdee - 750);
+
+  const protein = Math.round(weight * 2.0);
+  const fat = Math.round((deficit * 0.28) / 9);
+  const carbs = Math.max(Math.round((deficit - protein * 4 - fat * 9) / 4), 0);
+
+  const diff = weight - goalWeight;
+  const weeks = Math.round(diff / 0.5);
+  const months = Math.round(weeks / 4.3);
+  const bmiPos = Math.min(Math.max(((bmi - 15) / 25) * 100, 2), 98);
+
+  document.getElementById('bmiVal').textContent = bmi.toFixed(1);
+  document.getElementById('bmiCategory').textContent = bmiCat;
+  document.getElementById('bmiRange').textContent = bmiRng + ' | Ideál: ' + idealW + ' kg';
+  document.getElementById('bmiCursor').style.left = bmiPos + '%';
+  document.getElementById('kcalVal').textContent = deficit;
+  document.getElementById('kcalSub').textContent = 'Cieľ: −' + diff.toFixed(1) + ' kg | Udržiavacie: ' + tdee + ' kcal';
+  document.getElementById('kcalMaint').textContent = tdee;
+  document.getElementById('kcalDeficit').textContent = deficit;
+  document.getElementById('kcalAggr').textContent = aggressive;
+  document.getElementById('macroP').textContent = protein;
+  document.getElementById('macroC').textContent = carbs;
+  document.getElementById('macroF').textContent = fat;
+  document.getElementById('timelineNum').textContent = months;
+  document.getElementById('timelineDetail').innerHTML = '<strong>' + months + ' mesiacov</strong><br>pri deficite 500 kcal/deň<br>' + weeks + ' týždňov';
+
+  const dots = document.getElementById('timelineDots');
+  dots.innerHTML = '';
+  for (let i = 0; i < Math.min(months, 36); i++) {
+    const d = document.createElement('div');
+    d.className = 't-dot' + (i === 0 ? ' done' : '');
+    dots.appendChild(d);
+  }
+
+  document.getElementById('resultSubtitle').textContent = weight + ' kg → ' + goalWeight + ' kg  |  −' + diff.toFixed(1) + ' kg';
+
+  // ===== PERSONALIZOVANÝ VÝSTUP =====
+  // Realistický rozsah tempa: 0.4–0.7 kg/týždeň (zdravé chudnutie)
+  var loss4mMin = Math.round(0.4 * 17.3 * 10) / 10; // ~4 mesiace = 17.3 týždňov
+  var loss4mMax = Math.round(0.7 * 17.3 * 10) / 10;
+  // Nemôžeš schudnúť viac ako je tvoj cieľ
+  loss4mMin = Math.min(loss4mMin, diff);
+  loss4mMax = Math.min(loss4mMax, diff);
+  var loss4mMinR = Math.round(loss4mMin);
+  var loss4mMaxR = Math.round(loss4mMax);
+
+  var headline, sub;
+  if (bmi < 18.5) {
+    headline = 'Tvoje BMI je pod normou. <span class="hl">Poďme to spraviť zdravo.</span>';
+    sub = 'Namiesto chudnutia sa zamerajme na budovanie sily a zdravé priberanie. Valyra ti pripraví plán na mieru.';
+  } else if (diff <= loss4mMax) {
+    // Cieľ je dosiahnuteľný do ~4 mesiacov
+    var mLabel = months === 1 ? 'mesiac' : (months >= 2 && months <= 4) ? 'mesiace' : 'mesiacov';
+    headline = 'Podľa tvojich údajov môžeš svojich <span class="hl">−' + diff.toFixed(1) + ' kg</span> dosiahnuť približne za <span class="hl">' + months + ' ' + mLabel + '</span>.';
+    sub = 'Pri zdravom tempe a bez extrémov. Pripravili sme pre teba individuálny plán vo Valyre, ktorý ťa k cieľu dovedie krok za krokom.';
+  } else {
+    // Väčší cieľ - ukáž 4-mesačnú projekciu
+    headline = 'Pri súčasnom tempe môžeš za <span class="hl">4 mesiace</span> schudnúť približne <span class="hl">' + loss4mMinR + '–' + loss4mMaxR + ' kg</span>.';
+    sub = 'To je reálny, udržateľný začiatok tvojej cesty k −' + diff.toFixed(1) + ' kg. Vo Valyre pre teba máme pripravený plán, ktorý sa prispôsobuje tvojmu pokroku.';
+  }
+  document.getElementById('insightHeadline').innerHTML = headline;
+  document.getElementById('insightSub').textContent = sub;
+
+  // Zhrnutie výsledku – pripojí sa k rezervácii hovoru, aby si videl čísla klienta
+  window.__formioSummary = 'Z kalkulačky: ' + weight + '→' + goalWeight + ' kg (−' + diff.toFixed(1) + ' kg), '
+    + 'BMI ' + bmi.toFixed(1) + ' (' + bmiCat + '), ' + deficit + ' kcal/deň, odhad ~' + months + ' mes.';
+  resetConsultForm();
+
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('results').classList.add('show');
+  var cb=document.getElementById('consultBanner'); if(cb) cb.style.display = 'block';
+  var vc=document.getElementById('valyraCta'); if(vc) vc.style.display = 'block';
+  trackEvent('CompleteRegistration', {content_name:'formio_calculator_completed'});
+  window.scrollTo(0, 0);
+}
+
+function resetCalc() {
+  document.getElementById('formSection').style.display = 'flex';
+  document.getElementById('results').classList.remove('show');
+  var cb2=document.getElementById('consultBanner'); if(cb2) cb2.style.display = 'none';
+  var vc2=document.getElementById('valyraCta'); if(vc2) vc2.style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+// ===== REZERVÁCIA HOVORU =====
+function resetConsultForm() {
+  var f = document.getElementById('consultForm'); if (f) f.style.display = 'flex';
+  var s = document.getElementById('consultSuccess'); if (s) { s.style.display = 'none'; s.innerHTML = ''; }
+}
+
+function submitConsult(e) {
+  e.preventDefault();
+  var name = document.getElementById('cName').value.trim();
+  var phone = document.getElementById('cPhone').value.trim();
+  var time = document.getElementById('cTime').value;
+  if (!name || !phone) return;
+  var summary = window.__formioSummary || '';
+  var payload = { name: name, phone: phone, preferredTime: time, summary: summary, source: 'formio_kalkulacka', ts: new Date().toISOString() };
+  trackEvent('Lead', { content_name: 'hovor_rezervovany' });
+
+  function showSuccess() {
+    document.getElementById('consultForm').style.display = 'none';
+    var s = document.getElementById('consultSuccess');
+    s.style.display = 'block';
+    s.innerHTML = '✅ Ďakujem, ' + name + '! Ozvem sa ti na ' + phone + ' (' + time.toLowerCase() + '). Zvyčajne do pár hodín.';
+  }
+
+  if (CONFIG.consult.webhookUrl) {
+    // Uloží do Google Sheetu + e-mail (Apps Script webhook, ako veritas)
+    try {
+      fetch(CONFIG.consult.webhookUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+    } catch (err) {}
+    showSuccess();
+  } else {
+    // Fallback bez nastavenia: pošle rezerváciu tebe na WhatsApp
+    var msg = 'REZERVÁCIA nezáväzného 15-min hovoru\n\n'
+      + 'Meno: ' + name + '\nTelefón: ' + phone + '\nKedy sa mi hodí: ' + time + '\n\n' + summary;
+    window.open('https://wa.me/' + CONFIG.contact.whatsapp + '?text=' + encodeURIComponent(msg), '_blank');
+    showSuccess();
+  }
+}
+
+// ===== TRACKING =====
+const STORE_KEY = 'formio_entries';
+let chartInstance = null;
+let currentMetric = 'weight';
+let pendingPhoto = null;
+
+function getEntries() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e) { return []; }
+}
+function saveEntries(arr) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(arr));
+}
+
+document.getElementById('trackDate').value = new Date().toISOString().split('T')[0];
+
+function previewPhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      pendingPhoto = canvas.toDataURL('image/jpeg', 0.78);
+      const area = document.getElementById('photoPreview');
+      area.innerHTML = '<img src="' + pendingPhoto + '" alt="Náhľad fotky">';
+      area.style.cursor = 'default';
+      document.getElementById('photoClearBtn').style.display = 'block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function clearPhoto() {
+  pendingPhoto = null;
+  const area = document.getElementById('photoPreview');
+  area.innerHTML = '<div class="photo-upload-icon">📷</div><div class="photo-upload-label">Vybrať z galérie</div>';
+  area.style.cursor = 'pointer';
+  document.getElementById('photoClearBtn').style.display = 'none';
+  document.getElementById('tPhoto').value = '';
+}
+
+function saveEntry() {
+  const date = document.getElementById('trackDate').value;
+  if (!date) { alert('Vyber dátum.'); return; }
+  const w = document.getElementById('tWeight').value;
+  const arm = document.getElementById('tArm').value;
+  const waist = document.getElementById('tWaist').value;
+  const hips = document.getElementById('tHips').value;
+  const thigh = document.getElementById('tThigh').value;
+  if (!w && !arm && !waist && !hips && !thigh) { alert('Zadaj aspoň jednu hodnotu.'); return; }
+
+  const entries = getEntries();
+  const idx = entries.findIndex(e => e.date === date);
+  const existing = idx >= 0 ? entries[idx] : {};
+  const entry = {
+    date,
+    weight: w ? parseFloat(w) : null,
+    arm: arm ? parseFloat(arm) : null,
+    waist: waist ? parseFloat(waist) : null,
+    hips: hips ? parseFloat(hips) : null,
+    thigh: thigh ? parseFloat(thigh) : null,
+    photo: pendingPhoto !== null ? pendingPhoto : (existing.photo || null),
+  };
+  if (idx >= 0) entries[idx] = entry; else entries.push(entry);
+  entries.sort((a, b) => a.date.localeCompare(b.date));
+  saveEntries(entries);
+  trackEvent('FormioTrackingSaved', {content_name: 'tracking_entry', entry_count: entries.length});
+
+  ['tWeight','tArm','tWaist','tHips','tThigh'].forEach(id => document.getElementById(id).value = '');
+  clearPhoto();
+  renderTracking();
+}
+
+function deleteEntry(date) {
+  if (!confirm('Vymazať záznam z ' + date + '?')) return;
+  saveEntries(getEntries().filter(e => e.date !== date));
+  renderTracking();
+}
+
+function renderTracking() {
+  const entries = getEntries();
+  const hasData = entries.length > 0;
+  document.getElementById('emptyState').style.display = hasData ? 'none' : 'block';
+  document.getElementById('statsSection').style.display = hasData ? 'block' : 'none';
+  document.getElementById('historySection').style.display = hasData ? 'block' : 'none';
+  document.getElementById('chartWrap').style.display = hasData ? 'block' : 'none';
+  document.getElementById('trackValyraCta').style.display = hasData ? 'block' : 'none';
+  if (!hasData) return;
+  renderStats(entries);
+  renderChart(entries, currentMetric);
+  renderHistory(entries);
+}
+
+function renderStats(entries) {
+  const last = entries[entries.length - 1];
+  const prev = entries.length > 1 ? entries[entries.length - 2] : null;
+  const metrics = [
+    { key: 'weight', label: 'Váha', unit: 'kg' },
+    { key: 'waist', label: 'Pás', unit: 'cm' },
+    { key: 'hips', label: 'Boky', unit: 'cm' },
+  ];
+  document.getElementById('statsRow').innerHTML = metrics.map(m => {
+    const val = last[m.key];
+    const pval = prev ? prev[m.key] : null;
+    let delta = '';
+    if (val !== null && pval !== null) {
+      const d = (val - pval).toFixed(1);
+      const cls = d < 0 ? 'delta-down' : (d > 0 ? 'delta-up' : 'delta-eq');
+      delta = '<div class="stat-delta ' + cls + '">' + (d > 0 ? '+' : '') + d + ' ' + m.unit + '</div>';
+    }
+    return '<div class="stat-box"><div class="stat-val' + (val === null ? ' neutral' : '') + '">' +
+      (val !== null ? val : '–') + '</div><div class="stat-lbl">' + m.label + '</div>' + delta + '</div>';
+  }).join('');
+}
+
+const METRIC_LABELS = { weight:'Váha (kg)', arm:'Paža (cm)', waist:'Pás (cm)', hips:'Boky (cm)', thigh:'Stehno (cm)' };
+
+function renderChart(entries, metric) {
+  const filtered = entries.filter(e => e[metric] !== null);
+  if (!filtered.length) return;
+  const ctx = document.getElementById('trackChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: filtered.map(e => e.date.slice(5)),
+      datasets: [{
+        label: METRIC_LABELS[metric],
+        data: filtered.map(e => e[metric]),
+        borderColor: '#e8ff47',
+        backgroundColor: 'rgba(232,255,71,0.08)',
+        pointBackgroundColor: '#e8ff47',
+        pointRadius: 4, pointHoverRadius: 6,
+        tension: 0.3, fill: true, borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e1e32',
+          borderColor: 'rgba(232,255,71,0.3)', borderWidth: 1,
+          titleColor: '#a0a0b0', bodyColor: '#e8ff47',
+          bodyFont: { size: 14, weight: 'bold' },
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#606080', font: { size: 11 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#606080', font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+function switchChart(metric, btn) {
+  currentMetric = metric;
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderChart(getEntries(), metric);
+}
+
+function renderHistory(entries) {
+  const body = document.getElementById('historyBody');
+  body.innerHTML = [...entries].reverse().map(e => {
+    const thumb = e.photo
+      ? '<img src="' + e.photo + '" class="hist-thumb" onclick="openPhoto(\'' + e.date + '\')" alt="Fotka">'
+      : '<span style="color:var(--text3);font-size:12px;">–</span>';
+    const chips = [];
+    if (e.arm !== null) chips.push('Paža: ' + e.arm + ' cm');
+    if (e.thigh !== null) chips.push('Stehno: ' + e.thigh + ' cm');
+    const chipsHtml = chips.length
+      ? '<div class="history-chips">' + chips.map(c => '<span class="chip">' + c + '</span>').join('') + '</div>'
+      : '';
+    return '<div class="history-entry">' +
+      '<div class="history-row">' +
+      '<span class="date-cell">' + e.date.slice(5) + '</span>' +
+      '<span class="val-cell' + (e.weight===null?' empty':'') + '">' + (e.weight!==null ? e.weight+'kg' : '–') + '</span>' +
+      '<span class="val-cell' + (e.waist===null?' empty':'') + '">' + (e.waist!==null ? e.waist : '–') + '</span>' +
+      '<span class="val-cell' + (e.hips===null?' empty':'') + '">' + (e.hips!==null ? e.hips : '–') + '</span>' +
+      '<span class="val-cell photo-cell">' + thumb + '</span>' +
+      '<button class="del-btn" onclick="deleteEntry(\'' + e.date + '\')" title="Vymazať">✕</button>' +
+      '</div>' + chipsHtml + '</div>';
+  }).join('');
+}
+
+// ===== PHOTO MODAL =====
+function openPhoto(date) {
+  const entry = getEntries().find(e => e.date === date);
+  if (!entry || !entry.photo) return;
+  document.getElementById('photoModalImg').src = entry.photo;
+  document.getElementById('photoModalDate').textContent = date;
+  document.getElementById('photoModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closePhoto() {
+  document.getElementById('photoModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ===== iOS BANNER =====
+(function() {
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSafari = /safari/i.test(navigator.userAgent) && !/chrome|crios|fxios/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = localStorage.getItem('ios_banner_dismissed');
+  if (isIos && isSafari && !isStandalone && !dismissed) {
+    setTimeout(() => { document.getElementById('iosBanner').style.display = 'block'; }, 1500);
+  }
+})();
+function closeIosBanner() {
+  document.getElementById('iosBanner').style.display = 'none';
+  localStorage.setItem('ios_banner_dismissed', '1');
+}
+</script>
+<script>if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js'); }</script>
+</body>
+</html>
