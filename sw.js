@@ -1,4 +1,4 @@
-const CACHE = 'transformacia-v5';
+const CACHE = 'transformacia-v6';
 const FILES = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', e => {

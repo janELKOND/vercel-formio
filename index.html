@@ -697,9 +697,9 @@ const CONFIG = {
   consult: {
     // webhookUrl: nechaj prázdne = rezervácia sa pošle tebe na WhatsApp (funguje hneď, bez nastavenia).
     // Keď chceš ukladať do Google Sheetu + e-mail, vlož sem Apps Script webhook (rovnako ako pri veritas kvíze).
-    webhookUrl: '',
+    webhookUrl: 'https://script.google.com/macros/s/AKfycbw0erJf6mnDCK_ma2JnXwVk6oC5i7oVF2g52u1s4Ad5v4BkURDz_DhRhqrTSAGWKRJ8/exec',
     titleCalc: 'Rezervuj si nezáväzný 15-minútový hovor',
-    subCalc: 'Nechaj mi kontakt a kedy sa ti hodí — ozvem sa ti a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.',
+    subCalc: 'Nechaj mi meno a číslo — zavolám ti večer medzi 18:30 a 19:30 a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.',
     ctaText: 'Rezervovať hovor →',
     privacy: '🔒 Tvoje údaje sú u nás v bezpečí — neposielame ich nikam ďalej',
     trust: '8 rokov praxe · prvá konzultácia zadarmo · bez záväzku',
@@ -904,17 +904,10 @@ function trackEvent(fbEventName, params) {
     <!-- KONZULTÁCIA (primárna akcia – dopyt) -->
     <div class="consult-banner" id="consultBanner" style="display:none;">
       <div class="consult-banner-title" data-cfg-text="consult.titleCalc">Chceš svoj cieľ dosiahnuť čo najrýchlejšie?</div>
-      <div class="consult-banner-sub" data-cfg-text="consult.subCalc">Nechaj mi kontakt a kedy sa ti hodí — ozvem sa ti a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.</div>
+      <div class="consult-banner-sub" data-cfg-text="consult.subCalc">Nechaj mi meno a číslo — zavolám ti večer medzi 18:30 a 19:30 a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.</div>
       <form class="consult-form" id="consultForm" onsubmit="submitConsult(event)">
         <input type="text" id="cName" class="consult-input" placeholder="Tvoje meno" required autocomplete="name">
         <input type="tel" id="cPhone" class="consult-input" placeholder="Telefón (napr. 0902 123 456)" required inputmode="tel" autocomplete="tel">
-        <select id="cTime" class="consult-input" aria-label="Kedy sa ti hodí">
-          <option value="Dnes večer">Kedy sa ti hodí? — Dnes večer</option>
-          <option value="Zajtra doobeda">Zajtra doobeda</option>
-          <option value="Zajtra večer">Zajtra večer</option>
-          <option value="Cez víkend">Cez víkend</option>
-          <option value="Kedykoľvek, dohodneme sa">Kedykoľvek — dohodneme sa</option>
-        </select>
         <button type="submit" class="btn-whatsapp" id="consultSubmit"><span data-cfg-text="consult.ctaText">Rezervovať hovor →</span></button>
       </form>
       <div class="consult-success" id="consultSuccess" style="display:none;"></div>
@@ -1228,7 +1221,7 @@ function submitConsult(e) {
   e.preventDefault();
   var name = document.getElementById('cName').value.trim();
   var phone = document.getElementById('cPhone').value.trim();
-  var time = document.getElementById('cTime').value;
+  var time = 'večer medzi 18:30 a 19:30';
   if (!name || !phone) return;
   var summary = window.__formioSummary || '';
   var payload = { name: name, phone: phone, preferredTime: time, summary: summary, source: 'formio_kalkulacka', ts: new Date().toISOString() };
@@ -1238,7 +1231,7 @@ function submitConsult(e) {
     document.getElementById('consultForm').style.display = 'none';
     var s = document.getElementById('consultSuccess');
     s.style.display = 'block';
-    s.innerHTML = '✅ Ďakujem, ' + name + '! Ozvem sa ti na ' + phone + ' (' + time.toLowerCase() + '). Zvyčajne do pár hodín.';
+    s.innerHTML = '✅ Ďakujem, ' + name + '! Zavolám ti na ' + phone + ' večer medzi 18:30 a 19:30.';
   }
 
   if (CONFIG.consult.webhookUrl) {
