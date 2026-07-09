@@ -705,7 +705,10 @@ const CONFIG = {
     trust: '8 rokov praxe · prvá konzultácia zadarmo · bez záväzku',
   },
   tracking: {
-    metaPixelId: '1529505581872759',
+    // Hlavný pixel: "formio najlepsi lead magnet" — TENTO sleduje FB kampaň "formio" (New Leads Ad). Nemeniť!
+    metaPixelId: '2221207801987418',
+    // Sekundárny pixel: "Valyra Pixel" — dostáva rovnaké eventy navyše.
+    metaPixelId2: '1529505581872759',
     clarityId: 'x6v4tcfaa7',
   }
 };
@@ -754,6 +757,7 @@ function applyConfig() {
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', CONFIG.tracking.metaPixelId);
+    if (CONFIG.tracking.metaPixelId2) fbq('init', CONFIG.tracking.metaPixelId2);
     fbq('track', 'PageView');
 </script>
 <script>
