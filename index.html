@@ -766,6 +766,11 @@ function trackEvent(fbEventName, params) {
   try { if (typeof fbq === 'function') fbq('track', fbEventName, params || {}); } catch (e) {}
   try { if (typeof clarity === 'function') clarity('event', fbEventName); } catch (e) {}
 }
+// Custom eventy (mimo štandardných Meta eventov) — nesmú ísť cez 'track', inak ich pixel odmietne.
+function trackCustom(fbEventName, params) {
+  try { if (typeof fbq === 'function') fbq('trackCustom', fbEventName, params || {}); } catch (e) {}
+  try { if (typeof clarity === 'function') clarity('event', fbEventName); } catch (e) {}
+}
 </script>
 </head>
 <body>
@@ -920,7 +925,7 @@ function trackEvent(fbEventName, params) {
       <div class="valyra-cta-tag" data-cfg-text="offer.tag">7 dní zadarmo</div>
       <div class="valyra-cta-title" data-cfg-text="offer.titleCalc">Toto bol len odhad. Chceš presný plán?</div>
       <div class="valyra-cta-sub" data-cfg-text="offer.subCalc">Valyra ti z týchto čísel pripraví personalizovaný jedálniček, tréning a koučing na mieru – a upravuje ho podľa tvojho pokroku.</div>
-      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackEvent('Lead', {content_name:'valyra_trial_calculator'})">Vyskúšaj Valyra zadarmo →</a>
+      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackCustom('ValyraClick', {content_name:'valyra_trial_calculator'})">Vyskúšaj Valyra zadarmo →</a>
       <div class="valyra-social-proof" data-cfg-text="offer.socialProof">Viac ako 100 žien už zmenilo svoje návyky</div>
     </div>
 
@@ -1000,7 +1005,7 @@ function trackEvent(fbEventName, params) {
       <div class="valyra-cta-tag" data-cfg-text="offer.tag">7 dní zadarmo</div>
       <div class="valyra-cta-title" data-cfg-text="offer.titleTrack">Sleduješ pokrok. Chceš aj plán, ktorý sa mu prispôsobí?</div>
       <div class="valyra-cta-sub" data-cfg-text="offer.subTrack">Valyra vyhodnotí tvoje merania a podľa vývoja upravuje jedálniček aj tréning – nemusíš si to počítať sama.</div>
-      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackEvent('Lead', {content_name:'valyra_trial_tracking'})">Vyskúšaj Valyra zadarmo →</a>
+      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackCustom('ValyraClick', {content_name:'valyra_trial_tracking'})">Vyskúšaj Valyra zadarmo →</a>
     </div>
 
     <div id="historySection" style="display:none;">
@@ -1047,7 +1052,7 @@ function trackEvent(fbEventName, params) {
       Chceš komplexný program s pravidelným koučingom?<br>
       <strong data-cfg-text="offer.name">Valyra</strong> – personalizovaný plán, výživa, tréning.
       <br><br>
-      <a href="https://valyra.pro" target="_blank" style="color:var(--accent);font-weight:700;text-decoration:none;" data-cfg-href="offer.url" data-cfg-text="offer.linkText" onclick="trackEvent('Lead', {content_name:'valyra_trial_contact_page'})">Pozrieť Valyra →</a>
+      <a href="https://valyra.pro" target="_blank" style="color:var(--accent);font-weight:700;text-decoration:none;" data-cfg-href="offer.url" data-cfg-text="offer.linkText" onclick="trackCustom('ValyraClick', {content_name:'valyra_trial_contact_page'})">Pozrieť Valyra →</a>
     </div>
 
   </div>
