@@ -804,6 +804,7 @@ function applyConfig() {
 <script>
 // ===== MERANIE – spustí sa až po súhlase (cookie lišta alebo checkbox vo formulári) =====
 var CONSENT_KEY = 'valyra_fb_consent';
+// Pixel a Clarity bežia vždy (rozhodnutie Jána). hasConsent() = súhlas s meraním zaškrtnutý vo formulári – riadi len serverové CAPI.
 function hasConsent() { try { return localStorage.getItem(CONSENT_KEY) === 'granted'; } catch (e) { return false; } }
 function enableMeasurement() {
   if (window.__formioMeasuring) return;
@@ -821,15 +822,13 @@ function enableMeasurement() {
   if (CONFIG.tracking.metaPixelId2) fbq('init', CONFIG.tracking.metaPixelId2);
   fbq('track', 'PageView');
 }
-if (hasConsent()) enableMeasurement();
+enableMeasurement();
 // Štandardné Meta eventy. opts = { eventID } kvôli deduplikácii s Conversions API.
 function trackEvent(fbEventName, params, opts) {
-  if (!hasConsent()) return;
   try { if (typeof fbq === 'function') fbq('track', fbEventName, params || {}, opts || {}); } catch (e) {}
   try { if (typeof clarity === 'function') clarity('event', fbEventName); } catch (e) {}
 }
 function trackCustom(fbEventName, params) {
-  if (!hasConsent()) return;
   try { if (typeof fbq === 'function') fbq('trackCustom', fbEventName, params || {}); } catch (e) {}
   try { if (typeof clarity === 'function') clarity('event', fbEventName); } catch (e) {}
 }
@@ -1008,7 +1007,7 @@ function trackCustom(fbEventName, params) {
         </select>
         <div class="hp-field" aria-hidden="true"><input type="text" id="lHp" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore></div>
         <label class="lead-consent"><input type="checkbox" id="lConsent"> <span>Súhlasím so spracovaním osobných údajov na účel zaslania plánu a dohodnutia konzultácie. <a href="https://jankaras.valyra.sk/ochrana-udajov" target="_blank" rel="noopener">Viac</a></span></label>
-        <label class="lead-consent" id="lMeasureWrap"><input type="checkbox" id="lMeasure"> <span>Súhlasím s meraním účinnosti reklamy cez Meta (pixel a Conversions API). Súhlas môžeš kedykoľvek odvolať v nastaveniach cookies dole na stránke.</span></label>
+        <label class="lead-consent" id="lMeasureWrap"><input type="checkbox" id="lMeasure"> <span>Súhlasím s meraním účinnosti reklamy cez Meta (pixel a Conversions API). Súhlas môžeš kedykoľvek odvolať e-mailom.</span></label>
         <div class="lead-err" id="leadErr" role="alert"></div>
         <button type="submit" class="lead-submit" id="leadSubmit">Odomknúť môj plán →</button>
         <div class="lead-note">Nič neplatíš. Údaje nikomu nepredávam.</div>
@@ -1141,12 +1140,8 @@ function trackCustom(fbEventName, params) {
   </div>
 </div>
 
-<div class="foot-links">© 2026 Ján Karas · <a href="https://jankaras.valyra.sk/ochrana-udajov" target="_blank" rel="noopener">Ochrana osobných údajov</a> · <button type="button" onclick="document.getElementById('consentBar').style.display='block'">Nastavenia cookies</button></div>
+<div class="foot-links">© 2026 Ján Karas · <a href="https://jankaras.valyra.sk/ochrana-udajov" target="_blank" rel="noopener">Ochrana osobných údajov</a></div>
 
-<div class="consent-bar" id="consentBar" style="display:none;" role="dialog" aria-label="Súhlas s cookies">
-  Cookies používam na meranie reklamy (Meta) a na zlepšovanie aplikácie (Microsoft Clarity). Kalkulačka funguje rovnako aj bez nich. <a href="https://jankaras.valyra.sk/ochrana-udajov#cookies" target="_blank" rel="noopener">Viac</a>
-  <div class="cb-actions"><button type="button" onclick="setConsent('denied')">Odmietnuť</button><button type="button" onclick="setConsent('granted')">Súhlasím</button></div>
-</div>
 
 <!-- PHOTO MODAL -->
 <div id="photoModal" class="photo-modal" style="display:none;" onclick="closePhoto()">
@@ -1477,18 +1472,12 @@ function loadCal(saved) {
   });
 }
 
-// ===== COOKIE LIŠTA =====
+// ===== SÚHLAS S MERANÍM (len checkbox vo formulári, riadi CAPI) =====
 function setConsent(v) {
   try { localStorage.setItem(CONSENT_KEY, v); } catch (e) {}
-  document.getElementById('consentBar').style.display = 'none';
   var mw = document.getElementById('lMeasureWrap'); if (mw) mw.style.display = (v === 'granted') ? 'none' : 'flex';
-  if (v === 'granted') enableMeasurement();
 }
-(function () {
-  var v = null; try { v = localStorage.getItem(CONSENT_KEY); } catch (e) {}
-  if (v !== 'granted' && v !== 'denied') document.getElementById('consentBar').style.display = 'block';
-  if (v === 'granted') document.getElementById('lMeasureWrap').style.display = 'none';
-})();
+(function () { if (hasConsent()) document.getElementById('lMeasureWrap').style.display = 'none'; })();
 
 // ===== TRACKING =====
 const STORE_KEY = 'formio_entries';
