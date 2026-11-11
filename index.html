@@ -656,6 +656,81 @@ select.consult-input {
 }
 .ios-arrow { font-size: 20px; animation: bounce 1s infinite; display: inline-block; margin-top: 4px; }
 @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+/* ===== LEAD MAGNET ===== */
+.locked-wrap { position: relative; display: flex; flex-direction: column; gap: 14px; }
+.locked-wrap.is-locked .locked-inner { filter: blur(7px); pointer-events: none; user-select: none; }
+.locked-overlay {
+  position: absolute; inset: 0; display: none; align-items: center; justify-content: center; z-index: 5;
+}
+.locked-wrap.is-locked .locked-overlay { display: flex; }
+.locked-badge {
+  background: var(--bg2); border: 1px solid var(--accent); border-radius: var(--r);
+  padding: 16px 18px; text-align: center; max-width: 290px; box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
+.locked-badge strong { display: block; font-size: 16px; margin-bottom: 4px; }
+.locked-badge span { font-size: 13px; color: var(--text2); line-height: 1.5; display: block; margin-bottom: 12px; }
+.locked-badge button {
+  background: var(--accent); color: #0f0f1a; border: 0; border-radius: var(--rs);
+  font-weight: 800; font-size: 14px; padding: 11px 16px; cursor: pointer; width: 100%;
+}
+.week-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.week-list li { display: flex; gap: 10px; font-size: 14px; color: var(--text2); line-height: 1.55; }
+.week-list li b { color: var(--text); }
+.week-list .wn {
+  flex: 0 0 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #0f0f1a;
+  font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.lead-card {
+  background: linear-gradient(160deg, rgba(232,255,71,0.10), rgba(232,255,71,0.02));
+  border: 1.5px solid var(--accent); border-radius: var(--r); padding: 20px 16px;
+}
+.lead-card h3 { font-size: 19px; line-height: 1.3; margin-bottom: 6px; }
+.lead-card h3 span { color: var(--accent); }
+.lead-card .lc-sub { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; }
+.lead-card .lc-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.lead-card .lc-list li { font-size: 13px; color: var(--text); padding-left: 22px; position: relative; }
+.lead-card .lc-list li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 800; }
+.lead-form { display: flex; flex-direction: column; gap: 10px; }
+.lead-form label.lbl { font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: -4px; }
+.lead-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; color: var(--text2); line-height: 1.5; }
+.lead-consent input { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 1px; accent-color: var(--accent); }
+.lead-consent a { color: var(--accent); }
+.lead-err { color: #ff8a80; font-size: 13px; font-weight: 600; display: none; }
+.lead-err a { color: #ff8a80; }
+.lead-submit {
+  background: var(--accent); color: #0f0f1a; border: 0; border-radius: var(--r);
+  font-size: 16px; font-weight: 800; padding: 15px; cursor: pointer; margin-top: 4px;
+}
+.lead-submit[disabled] { opacity: 0.6; cursor: wait; }
+.lead-note { font-size: 12px; color: var(--text3); text-align: center; line-height: 1.5; }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.consult-input.invalid { border-color: #ff8a80; }
+.cal-card { background: #fff; border-radius: var(--r); overflow: hidden; }
+#cal-inline { width: 100%; min-height: 620px; overflow: auto; }
+.done-card {
+  background: rgba(129,199,132,0.1); border: 1px solid rgba(129,199,132,0.35);
+  border-radius: var(--r); padding: 18px 16px; font-size: 14px; color: var(--text); line-height: 1.6;
+}
+.done-card h3 { font-size: 18px; margin-bottom: 6px; }
+.done-card p { color: var(--text2); }
+.cal-intro h3 { font-size: 18px; margin-bottom: 4px; }
+.cal-intro p { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 10px; }
+.cal-intro a { color: var(--accent); }
+/* cookie lišta */
+.consent-bar {
+  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 1001; max-width: 520px; margin: 0 auto;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+  font-size: 13px; color: var(--text2); line-height: 1.5; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.consent-bar a { color: var(--accent); }
+.consent-bar .cb-actions { display: flex; gap: 8px; margin-top: 10px; }
+.consent-bar button {
+  flex: 1; border: 0; border-radius: 10px; padding: 11px; font-weight: 700; font-size: 14px; cursor: pointer;
+  background: var(--accent); color: #0f0f1a;
+}
+.foot-links { text-align: center; font-size: 12px; color: var(--text3); padding: 18px 20px 0; }
+.foot-links a, .foot-links button { color: var(--text3); background: none; border: 0; font: inherit; text-decoration: underline; cursor: pointer; }
 </style>
 <!-- ===== CONFIG – pri novom klientovi/projekte meníš LEN TOTO, zvyšok kódu sa nedotýka ===== -->
 <script>
@@ -668,7 +743,7 @@ const CONFIG = {
   contact: {
     name: 'Ján Karas',
     initials: 'JK',
-    title: 'Fitness tréner a výživový poradca • 8 rokov praxe',
+    title: 'Certifikovaný tréner · −45 kg, udržané 8 rokov',
     services: [
       'Pomôžem ti schudnúť bez hladovania',
       'Nastavím ti jedálniček na mieru',
@@ -682,27 +757,15 @@ const CONFIG = {
     phoneDisplay: '0902 404 722',
     email: 'karas.jan2@gmail.com',
   },
-  offer: {
-    name: 'Valyra',
-    url: 'https://valyra.pro',
-    tag: '7 dní zadarmo',
-    titleCalc: 'Toto bol len odhad. Chceš presný plán?',
-    subCalc: 'Valyra ti z týchto čísel pripraví personalizovaný jedálniček, tréning a koučing na mieru – a upravuje ho podľa tvojho pokroku.',
-    titleTrack: 'Sleduješ pokrok. Chceš aj plán, ktorý sa mu prispôsobí?',
-    subTrack: 'Valyra vyhodnotí tvoje merania a podľa vývoja upravuje jedálniček aj tréning – nemusíš si to počítať sama.',
-    ctaText: 'Vyskúšaj Valyra zadarmo →',
-    linkText: 'Pozrieť Valyra →',
-    socialProof: 'Vytvoril tréner s 8-ročnou praxou',
-  },
-  consult: {
-    // webhookUrl: nechaj prázdne = rezervácia sa pošle tebe na WhatsApp (funguje hneď, bez nastavenia).
-    // Keď chceš ukladať do Google Sheetu + e-mail, vlož sem Apps Script webhook (rovnako ako pri veritas kvíze).
-    webhookUrl: 'https://script.google.com/macros/s/AKfycbw0erJf6mnDCK_ma2JnXwVk6oC5i7oVF2g52u1s4Ad5v4BkURDz_DhRhqrTSAGWKRJ8/exec',
-    titleCalc: 'Rezervuj si nezáväzný 15-minútový hovor',
-    subCalc: 'Nechaj mi meno a číslo — zavolám ti večer medzi 18:30 a 19:30 a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.',
-    ctaText: 'Rezervovať hovor →',
-    privacy: '🔒 Tvoje údaje sú u nás v bezpečí — neposielame ich nikam ďalej',
-    trust: '8 rokov praxe · prvá konzultácia zadarmo · bez záväzku',
+  lead: {
+    // Leady idú do rovnakého systému ako jankaras.valyra.sk (Supabase coaching_leads, notifikácia, CAPI, follow-up).
+    endpoint: 'https://ztuudcgmzbkkbldnkqay.supabase.co/functions/v1/coachingLead',
+    calLink: 'jan-karas-kdm2il/30min',
+    privacyUrl: 'https://jankaras.valyra.sk/ochrana-udajov',
+    // Zdroj pre coachingLead podľa toho, kto kalkulačku vyplnil (riadi vekový limit a text follow-up e-mailov).
+    sourceWoman: 'formio-kalkulacka',
+    sourceWoman40: 'landing-po40',
+    sourceMan: 'landing-otcovia',
   },
   tracking: {
     // Hlavný pixel: "formio najlepsi lead magnet" — TENTO sleduje FB kampaň "formio" (New Leads Ad). Nemeniť!
@@ -738,36 +801,35 @@ function applyConfig() {
   document.documentElement.style.setProperty('--accent2', CONFIG.brand.accent2);
 }
 </script>
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", CONFIG.tracking.clarityId);
-</script>
-<!-- Meta Pixel -->
-<script type="text/javascript">
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', CONFIG.tracking.metaPixelId);
-    if (CONFIG.tracking.metaPixelId2) fbq('init', CONFIG.tracking.metaPixelId2);
-    fbq('track', 'PageView');
-</script>
 <script>
-// Jednotný tracking helper – fíruje Meta Pixel aj Clarity custom event naraz.
-function trackEvent(fbEventName, params) {
-  try { if (typeof fbq === 'function') fbq('track', fbEventName, params || {}); } catch (e) {}
+// ===== MERANIE – spustí sa až po súhlase (cookie lišta alebo checkbox vo formulári) =====
+var CONSENT_KEY = 'valyra_fb_consent';
+function hasConsent() { try { return localStorage.getItem(CONSENT_KEY) === 'granted'; } catch (e) { return false; } }
+function enableMeasurement() {
+  if (window.__formioMeasuring) return;
+  window.__formioMeasuring = true;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", CONFIG.tracking.clarityId);
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('consent', 'grant');
+  fbq('init', CONFIG.tracking.metaPixelId);
+  if (CONFIG.tracking.metaPixelId2) fbq('init', CONFIG.tracking.metaPixelId2);
+  fbq('track', 'PageView');
+}
+if (hasConsent()) enableMeasurement();
+// Štandardné Meta eventy. opts = { eventID } kvôli deduplikácii s Conversions API.
+function trackEvent(fbEventName, params, opts) {
+  if (!hasConsent()) return;
+  try { if (typeof fbq === 'function') fbq('track', fbEventName, params || {}, opts || {}); } catch (e) {}
   try { if (typeof clarity === 'function') clarity('event', fbEventName); } catch (e) {}
 }
-// Custom eventy (mimo štandardných Meta eventov) — nesmú ísť cez 'track', inak ich pixel odmietne.
 function trackCustom(fbEventName, params) {
+  if (!hasConsent()) return;
   try { if (typeof fbq === 'function') fbq('trackCustom', fbEventName, params || {}); } catch (e) {}
   try { if (typeof clarity === 'function') clarity('event', fbEventName); } catch (e) {}
 }
@@ -788,7 +850,7 @@ function trackCustom(fbEventName, params) {
   <div class="hero">
     <span class="hero-tag" data-cfg-text="brand.name">Formio</span>
     <h1>Tvojej forme to <span>povieme</span> rovno</h1>
-    <p>BMI, kalórie, makrá a odhad času do cieľa.</p>
+    <p>Za 30 sekúnd zistíš svoje BMI, kalórie na chudnutie, makrá a kedy budeš v cieli.</p>
   </div>
 
   <div class="form-wrap" id="formSection">
@@ -881,6 +943,15 @@ function trackCustom(fbEventName, params) {
         <div class="kcal-pill"><div class="pval" id="kcalAggr">–</div><div class="plabel">Rýchle</div></div>
       </div>
     </div>
+    <div class="locked-wrap is-locked" id="lockedWrap">
+    <div class="locked-overlay">
+      <div class="locked-badge">
+        <strong>🔒 Zvyšok plánu je pripravený</strong>
+        <span>Makrá, reálne tempo do cieľa a tvoj prvý týždeň krok za krokom.</span>
+        <button type="button" onclick="scrollToLead()">Odomknúť plán zadarmo ↓</button>
+      </div>
+    </div>
+    <div class="locked-inner">
     <div class="card">
       <div class="card-label">Makrá na deň</div>
       <div class="macro-grid">
@@ -906,28 +977,63 @@ function trackCustom(fbEventName, params) {
       </div>
       <div class="timeline-months" id="timelineDots"></div>
     </div>
-    <!-- KONZULTÁCIA (primárna akcia – dopyt) -->
-    <div class="consult-banner" id="consultBanner" style="display:none;">
-      <div class="consult-banner-title" data-cfg-text="consult.titleCalc">Chceš svoj cieľ dosiahnuť čo najrýchlejšie?</div>
-      <div class="consult-banner-sub" data-cfg-text="consult.subCalc">Nechaj mi meno a číslo — zavolám ti večer medzi 18:30 a 19:30 a spolu prejdeme, ako sa k cieľu dostaneš najrýchlejšie. Bez záväzku, bez predaja.</div>
-      <form class="consult-form" id="consultForm" onsubmit="submitConsult(event)">
-        <input type="text" id="cName" class="consult-input" placeholder="Tvoje meno" required autocomplete="name">
-        <input type="tel" id="cPhone" class="consult-input" placeholder="Telefón (napr. 0902 123 456)" required inputmode="tel" autocomplete="tel">
-        <button type="submit" class="btn-whatsapp" id="consultSubmit"><span data-cfg-text="consult.ctaText">Rezervovať hovor →</span></button>
+    <div class="card">
+      <div class="card-label">Tvoj prvý týždeň</div>
+      <ul class="week-list" id="weekList"></ul>
+    </div>
+    </div>
+    </div>
+    <!-- LEAD MAGNET -->
+    <div class="lead-card" id="leadCard">
+      <h3>Odomkni si <span>celý plán</span> zadarmo</h3>
+      <div class="lc-sub">Vyplň pár údajov a plán sa ti hneď odomkne tu na stránke. Potom si môžeš vybrať termín bezplatnej 30-minútovej konzultácie, kde ho spolu prispôsobíme tvojmu dňu.</div>
+      <ul class="lc-list">
+        <li>Makrá na deň (bielkoviny, sacharidy, tuky)</li>
+        <li>Reálny odhad, kedy budeš v cieli</li>
+        <li>Tvoj prvý týždeň v 4 konkrétnych krokoch</li>
+      </ul>
+      <form class="lead-form" id="leadForm" novalidate>
+        <input type="text" id="lName" class="consult-input" placeholder="Meno" autocomplete="given-name" maxlength="100">
+        <input type="email" id="lEmail" class="consult-input" placeholder="E-mail" autocomplete="email" inputmode="email" maxlength="200">
+        <input type="tel" id="lPhone" class="consult-input" placeholder="Telefón (0900 123 456)" autocomplete="tel" inputmode="tel" maxlength="40">
+        <label class="lbl" for="lBarrier">Čo ti doteraz pri chudnutí najviac bránilo?</label>
+        <select id="lBarrier" class="consult-input">
+          <option value="">Vyber</option>
+          <option>Nestíham – málo času</option>
+          <option>Večer sa prejedám / chute na sladké</option>
+          <option>Neviem, čo a koľko jesť</option>
+          <option>Začnem, ale po pár týždňoch to vzdám</option>
+          <option>Jem málo, a aj tak nechudnem</option>
+          <option>Iné</option>
+        </select>
+        <div class="hp-field" aria-hidden="true"><input type="text" id="lHp" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore></div>
+        <label class="lead-consent"><input type="checkbox" id="lConsent"> <span>Súhlasím so spracovaním osobných údajov na účel zaslania plánu a dohodnutia konzultácie. <a href="https://jankaras.valyra.sk/ochrana-udajov" target="_blank" rel="noopener">Viac</a></span></label>
+        <label class="lead-consent" id="lMeasureWrap"><input type="checkbox" id="lMeasure"> <span>Súhlasím s meraním účinnosti reklamy cez Meta (pixel a Conversions API). Súhlas môžeš kedykoľvek odvolať v nastaveniach cookies dole na stránke.</span></label>
+        <div class="lead-err" id="leadErr" role="alert"></div>
+        <button type="submit" class="lead-submit" id="leadSubmit">Odomknúť môj plán →</button>
+        <div class="lead-note">Nič neplatíš. Údaje nikomu nepredávam.</div>
       </form>
-      <div class="consult-success" id="consultSuccess" style="display:none;"></div>
-      <div class="consult-privacy" data-cfg-text="consult.privacy">🔒 Tvoje údaje sú u nás v bezpečí — neposielame ich nikam ďalej</div>
-      <div class="consult-trust" data-cfg-text="consult.trust">8 rokov praxe · prvá konzultácia zadarmo · bez záväzku</div>
     </div>
 
-    <!-- VALYRA (sekundárna akcia – tvoj produkt, predstavíš ho na konzultácii) -->
-    <div class="valyra-cta-card" id="valyraCta" style="display:none;">
-      <div class="valyra-cta-tag" data-cfg-text="offer.tag">7 dní zadarmo</div>
-      <div class="valyra-cta-title" data-cfg-text="offer.titleCalc">Toto bol len odhad. Chceš presný plán?</div>
-      <div class="valyra-cta-sub" data-cfg-text="offer.subCalc">Valyra ti z týchto čísel pripraví personalizovaný jedálniček, tréning a koučing na mieru – a upravuje ho podľa tvojho pokroku.</div>
-      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackCustom('ValyraClick', {content_name:'valyra_trial_calculator'})">Vyskúšaj Valyra zadarmo →</a>
-      <div class="valyra-social-proof" data-cfg-text="offer.socialProof">Viac ako 100 žien už zmenilo svoje návyky</div>
+    <div id="calStep" style="display:none;">
+      <div class="cal-intro">
+        <h3>Plán je odomknutý ✓</h3>
+        <p>Chceš ho prebrať so mnou? Vyber si 30 minút na <b>bezplatnú online konzultáciu</b>. Pozrieme sa na tvoje čísla, tvoj bežný deň a poviem ti, ako sa k cieľu dostaneš bez hladovania. Žiadny tlak.</p>
+      </div>
+      <div class="cal-card"><div id="cal-inline"></div></div>
+      <p class="lead-note" style="margin-top:10px;">Kalendár sa nenačítal? <a href="https://cal.com/jan-karas-kdm2il/30min" target="_blank" rel="noopener" style="color:var(--accent)">Otvor ho tu</a>.</p>
     </div>
+
+    <div class="done-card" id="groupStep" style="display:none;">
+      <h3>Plán je odomknutý ✓</h3>
+      <p>Ďakujem<span class="js-first"></span>. Do 2 pracovných dní sa ti ozvem osobne a navrhnem ti, aké vedenie bude sedieť práve tebe.</p>
+    </div>
+
+    <div class="done-card" id="bookedStep" style="display:none;">
+      <h3>Hotovo, vidíme sa na konzultácii ✓</h3>
+      <p>Potvrdenie s odkazom na hovor ti prišlo na e-mail. Priprav si 30 minút v kľude a zober so sebou čísla z kalkulačky.</p>
+    </div>
+
 
     <button class="reset-btn" onclick="resetCalc()">← Zmeniť hodnoty</button>
   </div>
@@ -1000,23 +1106,6 @@ function trackCustom(fbEventName, params) {
       <canvas id="trackChart" height="180"></canvas>
     </div>
 
-    <!-- VALYRA CTA pre engažovaných užívateľov trackera -->
-    <div class="valyra-cta-card" id="trackValyraCta" style="display:none; margin:0 0 4px;">
-      <div class="valyra-cta-tag" data-cfg-text="offer.tag">7 dní zadarmo</div>
-      <div class="valyra-cta-title" data-cfg-text="offer.titleTrack">Sleduješ pokrok. Chceš aj plán, ktorý sa mu prispôsobí?</div>
-      <div class="valyra-cta-sub" data-cfg-text="offer.subTrack">Valyra vyhodnotí tvoje merania a podľa vývoja upravuje jedálniček aj tréning – nemusíš si to počítať sama.</div>
-      <a href="https://valyra.pro" target="_blank" class="btn-valyra" data-cfg-href="offer.url" data-cfg-text="offer.ctaText" onclick="trackCustom('ValyraClick', {content_name:'valyra_trial_tracking'})">Vyskúšaj Valyra zadarmo →</a>
-    </div>
-
-    <div id="historySection" style="display:none;">
-      <div class="section-title" style="margin-bottom:0;">História meraní</div>
-      <div class="history-wrap">
-        <div class="history-header">
-          <span>Dátum</span><span>Váha</span><span>Pás</span><span>Boky</span><span>📷</span><span></span>
-        </div>
-        <div id="historyBody"></div>
-      </div>
-    </div>
 
     <div class="empty-state" id="emptyState">
       <span>📏</span>
@@ -1033,7 +1122,7 @@ function trackCustom(fbEventName, params) {
     <div class="contact-hero">
       <div class="contact-hero-avatar" data-cfg-text="contact.initials">JK</div>
       <div class="contact-hero-name" data-cfg-text="contact.name">Ján Karas</div>
-      <div class="contact-hero-title" data-cfg-text="contact.title">Fitness tréner a výživový poradca • 8 rokov praxe</div>
+      <div class="contact-hero-title" data-cfg-text="contact.title">Certifikovaný tréner · −45 kg, udržané 8 rokov</div>
       <div class="contact-services" data-cfg-html="contact.servicesHtml">
         <div class="contact-service"><span>✅</span> Pomôžem ti schudnúť bez hladovania</div>
         <div class="contact-service"><span>✅</span> Nastavím ti jedálniček na mieru</div>
@@ -1048,14 +1137,15 @@ function trackCustom(fbEventName, params) {
       </div>
     </div>
 
-    <div class="contact-valyra-note">
-      Chceš komplexný program s pravidelným koučingom?<br>
-      <strong data-cfg-text="offer.name">Valyra</strong> – personalizovaný plán, výživa, tréning.
-      <br><br>
-      <a href="https://valyra.pro" target="_blank" style="color:var(--accent);font-weight:700;text-decoration:none;" data-cfg-href="offer.url" data-cfg-text="offer.linkText" onclick="trackCustom('ValyraClick', {content_name:'valyra_trial_contact_page'})">Pozrieť Valyra →</a>
-    </div>
 
   </div>
+</div>
+
+<div class="foot-links">© 2026 Ján Karas · <a href="https://jankaras.valyra.sk/ochrana-udajov" target="_blank" rel="noopener">Ochrana osobných údajov</a> · <button type="button" onclick="document.getElementById('consentBar').style.display='block'">Nastavenia cookies</button></div>
+
+<div class="consent-bar" id="consentBar" style="display:none;" role="dialog" aria-label="Súhlas s cookies">
+  Cookies používam na meranie reklamy (Meta) a na zlepšovanie aplikácie (Microsoft Clarity). Kalkulačka funguje rovnako aj bez nich. <a href="https://jankaras.valyra.sk/ochrana-udajov#cookies" target="_blank" rel="noopener">Viac</a>
+  <div class="cb-actions"><button type="button" onclick="setConsent('denied')">Odmietnuť</button><button type="button" onclick="setConsent('granted')">Súhlasím</button></div>
 </div>
 
 <!-- PHOTO MODAL -->
@@ -1131,10 +1221,13 @@ function calculate() {
     ? 10 * weight + 6.25 * height - 5 * age - 161
     : 10 * weight + 6.25 * height - 5 * age + 5;
   const tdee = Math.round(bmr * activity);
-  const deficit = Math.round(tdee - 500);
-  const aggressive = Math.round(tdee - 750);
+  // Nikdy neodporúčame menej ako bezpečné minimum (ženy 1200, muži 1500 kcal).
+  const kcalFloor = gender === 'f' ? 1200 : 1500;
+  const deficit = Math.max(Math.round(tdee - 500), kcalFloor);
+  const aggressive = Math.max(Math.round(tdee - 750), kcalFloor);
 
-  const protein = Math.round(weight * 2.0);
+  // Bielkoviny z cieľovej váhy – pri nadváhe by výpočet z aktuálnej váhy dával nereálne čísla.
+  const protein = Math.round(goalWeight * 1.8);
   const fat = Math.round((deficit * 0.28) / 9);
   const carbs = Math.max(Math.round((deficit - protein * 4 - fat * 9) / 4), 0);
 
@@ -1181,29 +1274,37 @@ function calculate() {
   var headline, sub;
   if (bmi < 18.5) {
     headline = 'Tvoje BMI je pod normou. <span class="hl">Poďme to spraviť zdravo.</span>';
-    sub = 'Namiesto chudnutia sa zamerajme na budovanie sily a zdravé priberanie. Valyra ti pripraví plán na mieru.';
+    sub = 'Namiesto chudnutia sa oplatí zamerať na silu a dostatok jedla. Toto rád preberiem s tebou osobne na konzultácii.';
   } else if (diff <= loss4mMax) {
     // Cieľ je dosiahnuteľný do ~4 mesiacov
     var mLabel = months === 1 ? 'mesiac' : (months >= 2 && months <= 4) ? 'mesiace' : 'mesiacov';
     headline = 'Podľa tvojich údajov môžeš svojich <span class="hl">−' + diff.toFixed(1) + ' kg</span> dosiahnuť približne za <span class="hl">' + months + ' ' + mLabel + '</span>.';
-    sub = 'Pri zdravom tempe a bez extrémov. Pripravili sme pre teba individuálny plán vo Valyre, ktorý ťa k cieľu dovedie krok za krokom.';
+    sub = 'Pri zdravom tempe a bez hladovania. Nižšie si odomkni celý plán – makrá, tempo a prvý týždeň krok za krokom.';
   } else {
     // Väčší cieľ - ukáž 4-mesačnú projekciu
     headline = 'Pri súčasnom tempe môžeš za <span class="hl">4 mesiace</span> schudnúť približne <span class="hl">' + loss4mMinR + '–' + loss4mMaxR + ' kg</span>.';
-    sub = 'To je reálny, udržateľný začiatok tvojej cesty k −' + diff.toFixed(1) + ' kg. Vo Valyre pre teba máme pripravený plán, ktorý sa prispôsobuje tvojmu pokroku.';
+    sub = 'To je reálny a udržateľný začiatok cesty k −' + diff.toFixed(1) + ' kg. Nižšie si odomkni celý plán – makrá, tempo a prvý týždeň krok za krokom.';
   }
   document.getElementById('insightHeadline').innerHTML = headline;
   document.getElementById('insightSub').textContent = sub;
 
-  // Zhrnutie výsledku – pripojí sa k rezervácii hovoru, aby si videl čísla klienta
-  window.__formioSummary = 'Z kalkulačky: ' + weight + '→' + goalWeight + ' kg (−' + diff.toFixed(1) + ' kg), '
-    + 'BMI ' + bmi.toFixed(1) + ' (' + bmiCat + '), ' + deficit + ' kcal/deň, odhad ~' + months + ' mes.';
-  resetConsultForm();
+  // Tvoj prvý týždeň – 4 konkrétne kroky z jej čísel
+  var stepsPerDay = activity <= 1.2 ? '6 000' : (activity <= 1.375 ? '8 000' : '10 000');
+  var week = [
+    '<b>Jedz okolo ' + deficit + ' kcal denne.</b> Prvý týždeň si jedlo len zapisuj, nič neškrtaj. Väčšina ľudí zistí, že najviac kalórií padne večer.',
+    '<b>Bielkoviny ' + protein + ' g denne</b> – v každom jedle porcia veľkosti dlane (mäso, ryba, vajcia, tvaroh, skyr, strukoviny). Zasýti a chráni svaly.',
+    '<b>' + stepsPerDay + ' krokov denne</b> a 2–3 krátke silové tréningy po 20–30 minút. Stačí doma s vlastnou váhou.',
+    '<b>Raz týždenne sa odmeraj</b> – rovnaký deň ráno, váha aj pás. Zapíš si to v záložke Tracking. Ak 2 týždne po sebe nič nejde dole, uber 100–150 kcal.'
+  ];
+  document.getElementById('weekList').innerHTML = week.map(function(t, i){ return '<li><span class="wn">' + (i+1) + '</span><span>' + t + '</span></li>'; }).join('');
+
+  // Údaje pre lead – Ján ich uvidí v notifikácii
+  window.__formio = { gender: gender, age: age, weight: weight, goal: goalWeight, diff: diff, bmi: bmi, kcal: deficit, months: months };
+  applyLockState();
+  if (!window.__formioCalcAt) window.__formioCalcAt = Date.now();
 
   document.getElementById('formSection').style.display = 'none';
   document.getElementById('results').classList.add('show');
-  var cb=document.getElementById('consultBanner'); if(cb) cb.style.display = 'block';
-  var vc=document.getElementById('valyraCta'); if(vc) vc.style.display = 'block';
   trackEvent('CompleteRegistration', {content_name:'formio_calculator_completed'});
   window.scrollTo(0, 0);
 }
@@ -1211,48 +1312,183 @@ function calculate() {
 function resetCalc() {
   document.getElementById('formSection').style.display = 'flex';
   document.getElementById('results').classList.remove('show');
-  var cb2=document.getElementById('consultBanner'); if(cb2) cb2.style.display = 'none';
-  var vc2=document.getElementById('valyraCta'); if(vc2) vc2.style.display = 'none';
   window.scrollTo(0, 0);
 }
 
-// ===== REZERVÁCIA HOVORU =====
-function resetConsultForm() {
-  var f = document.getElementById('consultForm'); if (f) f.style.display = 'flex';
-  var s = document.getElementById('consultSuccess'); if (s) { s.style.display = 'none'; s.innerHTML = ''; }
-}
-
-function submitConsult(e) {
-  e.preventDefault();
-  var name = document.getElementById('cName').value.trim();
-  var phone = document.getElementById('cPhone').value.trim();
-  var time = 'večer medzi 18:30 a 19:30';
-  if (!name || !phone) return;
-  var summary = window.__formioSummary || '';
-  var payload = { name: name, phone: phone, preferredTime: time, summary: summary, source: 'formio_kalkulacka', ts: new Date().toISOString() };
-  trackEvent('Lead', { content_name: 'hovor_rezervovany' });
-
-  function showSuccess() {
-    document.getElementById('consultForm').style.display = 'none';
-    var s = document.getElementById('consultSuccess');
-    s.style.display = 'block';
-    s.innerHTML = '✅ Ďakujem, ' + name + '! Zavolám ti na ' + phone + ' večer medzi 18:30 a 19:30.';
-  }
-
-  if (CONFIG.consult.webhookUrl) {
-    // Uloží do Google Sheetu + e-mail (Apps Script webhook, ako veritas)
-    try {
-      fetch(CONFIG.consult.webhookUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-    } catch (err) {}
-    showSuccess();
+// ===== LEAD MAGNET =====
+var LEAD_KEY = 'formio_lead';
+function getSavedLead() { try { return JSON.parse(localStorage.getItem(LEAD_KEY) || 'null'); } catch (e) { return null; } }
+function applyLockState() {
+  var saved = getSavedLead();
+  var wrap = document.getElementById('lockedWrap');
+  if (saved) {
+    wrap.classList.remove('is-locked');
+    document.getElementById('leadCard').style.display = 'none';
+    showAfterLead(saved, false);
   } else {
-    // Fallback bez nastavenia: pošle rezerváciu tebe na WhatsApp
-    var msg = 'REZERVÁCIA nezáväzného 15-min hovoru\n\n'
-      + 'Meno: ' + name + '\nTelefón: ' + phone + '\nKedy sa mi hodí: ' + time + '\n\n' + summary;
-    window.open('https://wa.me/' + CONFIG.contact.whatsapp + '?text=' + encodeURIComponent(msg), '_blank');
-    showSuccess();
+    wrap.classList.add('is-locked');
+    document.getElementById('leadCard').style.display = 'block';
   }
 }
+function scrollToLead() {
+  var c = document.getElementById('leadCard');
+  c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(function(){ try { document.getElementById('lName').focus({ preventScroll: true }); } catch(e) {} }, 500);
+}
+function phoneOk(v) {
+  var d = v.replace(/[^\d+]/g, '');
+  return /^\+\d{11,15}$/.test(d) || /^00\d{11,15}$/.test(d) || /^0\d{9}$/.test(d) || /^9\d{8}$/.test(d);
+}
+function getCookie(n) {
+  var p = document.cookie.split(';').map(function (x) { return x.trim(); }).filter(function (x) { return x.indexOf(n + '=') === 0; })[0];
+  return p ? decodeURIComponent(p.slice(n.length + 1)) : '';
+}
+// Atribúcia: UTM a fbclid si zapamätáme pri vstupe (PWA môže neskôr bežať bez parametrov v URL).
+(function () {
+  try {
+    var q = new URLSearchParams(location.search);
+    if (q.get('fbclid') || q.get('utm_source')) {
+      sessionStorage.setItem('formio_attr', JSON.stringify({
+        fbclid: (q.get('fbclid') || '').slice(0, 300),
+        utmSource: (q.get('utm_source') || '').slice(0, 100), utmMedium: (q.get('utm_medium') || '').slice(0, 100),
+        utmCampaign: (q.get('utm_campaign') || '').slice(0, 150), utmContent: (q.get('utm_content') || q.get('ad_id') || '').slice(0, 150),
+        utmTerm: (q.get('utm_term') || '').slice(0, 150), landingUrl: location.href.slice(0, 1000)
+      }));
+    }
+  } catch (e) {}
+})();
+function attribution() {
+  var a = {};
+  try { a = JSON.parse(sessionStorage.getItem('formio_attr') || '{}') || {}; } catch (e) {}
+  var fbc = getCookie('_fbc') || (a.fbclid ? 'fb.1.' + Date.now() + '.' + a.fbclid : '');
+  return {
+    fbp: getCookie('_fbp').slice(0, 200), fbc: fbc.slice(0, 400), fbclid: a.fbclid || '',
+    utmSource: a.utmSource || '', utmMedium: a.utmMedium || '', utmCampaign: a.utmCampaign || '',
+    utmContent: a.utmContent || '', utmTerm: a.utmTerm || '', landingUrl: a.landingUrl || location.href.slice(0, 1000)
+  };
+}
+function leadError(msg, el) {
+  var e = document.getElementById('leadErr');
+  e.innerHTML = msg; e.style.display = 'block';
+  if (el) { el.classList.add('invalid'); try { el.focus(); } catch (x) {} }
+}
+document.getElementById('leadForm').addEventListener('input', function (e) {
+  if (e.target.classList) e.target.classList.remove('invalid');
+  document.getElementById('leadErr').style.display = 'none';
+});
+document.getElementById('leadForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var f = window.__formio;
+  if (!f) { resetCalc(); return; }
+  var nameEl = document.getElementById('lName'), emailEl = document.getElementById('lEmail'), phoneEl = document.getElementById('lPhone');
+  var barrierEl = document.getElementById('lBarrier'), consentEl = document.getElementById('lConsent'), measureEl = document.getElementById('lMeasure');
+  var name = nameEl.value.trim(), email = emailEl.value.trim(), phone = phoneEl.value.trim(), barrier = barrierEl.value;
+  if (!name) return leadError('Napíš mi, prosím, svoje meno.', nameEl);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return leadError('Skontroluj, prosím, e-mail.', emailEl);
+  if (!phoneOk(phone)) return leadError('Zadaj telefón v tvare 0900 123 456 alebo +421 900 123 456.', phoneEl);
+  if (!barrier) return leadError('Vyber, čo ti doteraz najviac bránilo.', barrierEl);
+  if (!consentEl.checked) return leadError('Potvrď, prosím, súhlas so spracovaním údajov.', consentEl);
+
+  if (measureEl.checked && !hasConsent()) setConsent('granted');
+  var measure = hasConsent();
+
+  var source = f.gender === 'm' ? CONFIG.lead.sourceMan : (f.age >= 40 ? CONFIG.lead.sourceWoman40 : CONFIG.lead.sourceWoman);
+  var kgNote = ('Formio: ' + f.weight + '→' + f.goal + ' kg, BMI ' + f.bmi.toFixed(1)).slice(0, 40);
+  var barrierNote = barrier + ' | Kalkulačka: ' + (f.gender === 'm' ? 'muž' : 'žena') + ', ' + f.age + ' r., '
+    + f.weight + ' → ' + f.goal + ' kg (−' + f.diff.toFixed(1) + ' kg), BMI ' + f.bmi.toFixed(1)
+    + ', ' + f.kcal + ' kcal/deň, odhad ~' + f.months + ' mes.';
+  var eventId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'formio-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+  var payload = Object.assign({
+    source: source, name: name, email: email, phone: phone, age: Math.round(f.age), kg: kgNote, barrier: barrierNote,
+    hp: document.getElementById('lHp').value, elapsedMs: Date.now() - (window.__formioCalcAt || Date.now()),
+    consent: true, marketingConsent: false, measurementConsent: measure, eventId: eventId
+  }, attribution());
+
+  var btn = document.getElementById('leadSubmit');
+  btn.disabled = true; btn.textContent = 'Odomykám…';
+  var ctrl = window.AbortController ? new AbortController() : null;
+  var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 12000);
+  fetch(CONFIG.lead.endpoint, {
+    method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined
+  }).then(function (res) {
+    clearTimeout(timer);
+    return res.json().catch(function(){ return {}; }).then(function (out) {
+      if (!res.ok) throw new Error((out && out.error) || ('API ' + res.status));
+      return out;
+    });
+  }).then(function (out) {
+    var trackName = (out && out.track) || 'individual';
+    trackEvent('Lead', { content_name: 'formio_plan', lead_track: trackName }, { eventID: eventId });
+    if (trackName === 'individual') trackEvent('Contact', { content_name: 'formio_plan', lead_track: trackName }, { eventID: eventId + '-contact' });
+    try { if (typeof clarity === 'function') clarity('set', 'lead_track', trackName); } catch (x) {}
+    var saved = { name: name, email: email, track: trackName, at: Date.now() };
+    try { localStorage.setItem(LEAD_KEY, JSON.stringify(saved)); } catch (x) {}
+    document.getElementById('lockedWrap').classList.remove('is-locked');
+    document.getElementById('leadCard').style.display = 'none';
+    showAfterLead(saved, true);
+    document.getElementById('lockedWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }).catch(function (err) {
+    clearTimeout(timer);
+    btn.disabled = false; btn.textContent = 'Skúsiť znova';
+    var msg = String(err && err.message || '');
+    leadError(/telef|e-mail|meno|súhlas/i.test(msg) ? msg : 'Odoslanie sa nepodarilo. Skús to, prosím, ešte raz, alebo mi napíš na <a href="' + CONFIG.contact.whatsappUrlCalc + '" target="_blank" rel="noopener">WhatsApp</a>.');
+  });
+});
+
+function showAfterLead(saved, fresh) {
+  var first = (saved.name || '').split(/\s+/)[0];
+  document.querySelectorAll('.js-first').forEach(function (el) { el.textContent = first ? ', ' + first : ''; });
+  if (saved.booked) { document.getElementById('bookedStep').style.display = 'block'; return; }
+  if (saved.track === 'group') { document.getElementById('groupStep').style.display = 'block'; return; }
+  document.getElementById('calStep').style.display = 'block';
+  loadCal(saved);
+}
+
+function loadCal(saved) {
+  if (window.__calLoaded) return;
+  window.__calLoaded = true;
+  (function (Cw, A, L) { var p = function (a, ar) { a.q.push(ar); }; var doc = Cw.document;
+    Cw.Cal = Cw.Cal || function () { var cal = Cw.Cal; var ar = arguments;
+      if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; doc.head.appendChild(doc.createElement('script')).src = A; cal.loaded = true; }
+      if (ar[0] === L) { var api = function () { p(api, arguments); }; var namespace = ar[1]; api.q = api.q || [];
+        if (typeof namespace === 'string') { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]); }
+        else p(cal, ar); return; }
+      p(cal, ar); };
+  })(window, 'https://app.cal.com/embed/embed.js', 'init');
+  Cal('init', { origin: 'https://cal.com' });
+  var cfg = { layout: 'column_view' };
+  if (saved.name) cfg.name = saved.name;
+  if (saved.email) cfg.email = saved.email;
+  Cal('inline', { elementOrSelector: '#cal-inline', calLink: CONFIG.lead.calLink, config: cfg });
+  Cal('ui', { theme: 'light', cssVarsPerTheme: { light: { 'cal-brand': '#1a1a2e' } }, hideEventTypeDetails: false });
+  Cal('on', {
+    action: 'bookingSuccessful',
+    callback: function (e) {
+      var det = (e && e.detail && e.detail.data) || {};
+      var uid = (det.booking && det.booking.uid) || det.uid || '';
+      trackEvent('Schedule', { content_name: 'formio_plan' }, uid ? { eventID: String(uid).slice(0, 200) } : {});
+      var s = getSavedLead() || {}; s.booked = true;
+      try { localStorage.setItem(LEAD_KEY, JSON.stringify(s)); } catch (x) {}
+      document.getElementById('calStep').style.display = 'none';
+      document.getElementById('bookedStep').style.display = 'block';
+      document.getElementById('bookedStep').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+}
+
+// ===== COOKIE LIŠTA =====
+function setConsent(v) {
+  try { localStorage.setItem(CONSENT_KEY, v); } catch (e) {}
+  document.getElementById('consentBar').style.display = 'none';
+  var mw = document.getElementById('lMeasureWrap'); if (mw) mw.style.display = (v === 'granted') ? 'none' : 'flex';
+  if (v === 'granted') enableMeasurement();
+}
+(function () {
+  var v = null; try { v = localStorage.getItem(CONSENT_KEY); } catch (e) {}
+  if (v !== 'granted' && v !== 'denied') document.getElementById('consentBar').style.display = 'block';
+  if (v === 'granted') document.getElementById('lMeasureWrap').style.display = 'none';
+})();
 
 // ===== TRACKING =====
 const STORE_KEY = 'formio_entries';
@@ -1346,7 +1582,6 @@ function renderTracking() {
   document.getElementById('statsSection').style.display = hasData ? 'block' : 'none';
   document.getElementById('historySection').style.display = hasData ? 'block' : 'none';
   document.getElementById('chartWrap').style.display = hasData ? 'block' : 'none';
-  document.getElementById('trackValyraCta').style.display = hasData ? 'block' : 'none';
   if (!hasData) return;
   renderStats(entries);
   renderChart(entries, currentMetric);
